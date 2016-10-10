@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -24,8 +23,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class RMHardwarePushbot
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
+    public DcMotor leftMotor   = null;
+    public DcMotor rightMotor  = null;
     //public DcMotor  armMotor    = null;
     //public Servo    leftClaw    = null;
     //public Servo    rightClaw   = null;

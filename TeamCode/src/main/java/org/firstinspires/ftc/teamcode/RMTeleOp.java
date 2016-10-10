@@ -51,8 +51,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="PushBot: RMTestOpMode", group="Pushbot")  // @Autonomous(...) is the other common choice
-// @Disabled
+@TeleOp(name="PushBot: RGMTeleOpMode", group="Pushbot")  // @Autonomous(...) is the other common choice
+@Disabled
 public class RMTeleOp extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -70,8 +70,8 @@ public class RMTeleOp extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotor  = hardwareMap.dcMotor.get("left motor");
-        rightMotor = hardwareMap.dcMotor.get("right motor");
+        leftMotor  = robot.leftMotor;
+        rightMotor = robot.rightMotor;
 
         // eg: Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
@@ -83,7 +83,7 @@ public class RMTeleOp extends LinearOpMode {
         runtime.reset();
 
         // run unt
-        // il the end of the match (driver presses STOP)
+        // idle the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "(RM) Run Time: " + runtime.toString());
             telemetry.update();
