@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.
 
 @Autonomous(name="Pushbot: Auto", group="Pushbot")
 //@Disabled
-public class Auto extends LinearOpMode {
+public class AutoEE extends LinearOpMode {
 
     /* Declare OpMode members. */
     Push robot   = new Push();   // Use a Pushbot's hardware
