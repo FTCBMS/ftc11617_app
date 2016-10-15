@@ -17,9 +17,9 @@ public class RGBSensorTest extends LinearOpMode {
         rgbs = hardwareMap.colorSensor.get("colorsensor");
         rgbs.enableLed(false);
         while (opModeIsActive()) {
-            telemetry.addData("Red: ", rgbs.red());
-            telemetry.addData("Green: ", rgbs.green());
-            telemetry.addData("Blue: ", rgbs.blue());
+            telemetry.addData("Red", rgbs.red());
+            telemetry.addData("Green", rgbs.green());
+            telemetry.addData("Blue", rgbs.blue());
             telemetry.update();
             idle();
         }
