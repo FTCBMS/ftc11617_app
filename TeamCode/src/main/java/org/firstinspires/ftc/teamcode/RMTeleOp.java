@@ -51,8 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="PushBot: RGMTeleOpMode", group="Pushbot")  // @Autonomous(...) is the other common choice
-@Disabled
+@TeleOp(name="PushBot: RMTeleOpMode", group="Pushbot")  // @Autonomous(...) is the other common choice
 public class RMTeleOp extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -75,9 +74,8 @@ public class RMTeleOp extends LinearOpMode {
 
         // eg: Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        // rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-
+        leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
