@@ -50,7 +50,7 @@ public class colbyPushBot
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("left_drive");
         rightMotor  = hwMap.dcMotor.get("right_drive");
-        sweeperMoter = hwMap.dcMotor.get("sweeper_drive");
+        //sweeperMoter = hwMap.dcMotor.get("sweeper_drive");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
@@ -62,7 +62,7 @@ public class colbyPushBot
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        sweeperMoter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //sweeperMoter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
