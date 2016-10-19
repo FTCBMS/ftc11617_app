@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="PushBot: RMTeleOpMode", group="Pushbot")  // @Autonomous(...) is the other common choice
+@TeleOp(name="PushBot: RGMTeleOpMode", group="Pushbot")  // @Autonomous(...) is the other common choice
 public class RMTeleOp extends LinearOpMode {
 
     /* Declare OpMode members. */
