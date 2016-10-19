@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="PushBot: RMTeleOpMode", group="Pushbot")  // @Autonomous(...) is the other common choice
-public class RMTeleOpAveryL extends LinearOpMode {
+public class TeleOpAveryL extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
