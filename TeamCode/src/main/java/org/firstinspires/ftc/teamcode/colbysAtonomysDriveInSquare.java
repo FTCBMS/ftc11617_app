@@ -46,12 +46,12 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  *
  * The code assumes that you do NOT have encoders on the wheels,
  *   otherwise you would use: PushbotAutoDriveByEncoder;
-    The desired path in this example is:*
  *
+ *   The desired path in this example is:
  *   - Drive forward for 3 seconds
  *   - Spin right for 1.3 seconds
  *   - Drive Backwards for 1 Second
- *   - Stop and close the claw.
+ *   //not anymore- Stop and close the claw.
  *
  *  The code is written in a simple form with no optimizations.
  *  However, there are several ways that this type of sequence could be streamlined,
@@ -60,20 +60,19 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Time Colby", group="Pushbot")
-//@Disabled
-public class colbysfirststeps extends LinearOpMode {
+@Autonomous(name="colby: Drive in square", group="Pushbot")
+public class colbysAtonomysDriveInSquare extends LinearOpMode {
 
     /* Declare OpMode members. */
-    colbyPushBot         robot   = new colbyPushBot();   // Use a Pushbot's hardware
+    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
-    //iNeedrocketLauchers
+
     static final double     FORWARD_SPEED = 0.6;
     static final double     TURN_SPEED    = 0.5;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
 
         /*
          * Initialize the drive system variables.
@@ -97,17 +96,15 @@ public class colbysfirststeps extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            idle();
         }
 
-        // Step 2:  Spin right for 1.3 seconds
+        // Step 2:  turn 90degrees
         robot.leftMotor.setPower(TURN_SPEED);
         robot.rightMotor.setPower(-TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.3)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            idle();
         }
 
         // Step 3:  Drive Backwards for 1 Second
@@ -117,18 +114,16 @@ public class colbysfirststeps extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            idle();
         }
 
-        // Step 4:  Stop and close the claw.
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
+        // Step 4:  finish square.
+        //robot.leftMotor.setPower(0);
+        //robot.rightMotor.setPower(0);
         //robot.leftClaw.setPosition(1.0);
         //robot.rightClaw.setPosition(0.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);
-        idle();
     }
 }
