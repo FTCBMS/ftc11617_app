@@ -50,16 +50,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
+@TeleOp(name="Trey Tele Op", group="Pushbot")
 //@Disabled
-public class colbysteleop extends OpMode{
+public class treysteleop extends OpMode{
 
     /* Declare OpMode members. */
-    colbyPushBot robot       = new colbyPushBot(); // use the class created to define a Pushbot's hardware
+    TreyPushBot robot = new TreyPushBot();
     private double sweeper;
-    // could also use HardwarePushbotMatrix class.
-    //double          clawOffset  = 0.0 ;                  // Servo mid position
-    //final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
 
     /*
@@ -103,52 +100,16 @@ public class colbysteleop extends OpMode{
         double left = forward_backword + gamepad1.right_stick_x;
         double right = forward_backword - gamepad1.right_stick_x;
 
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
+        robot.leftMotor.setPower(SafePower(left));
+        robot.rightMotor.setPower(SafePower(right));
+    }
 
-
-
-        /*
-        robot.leftMotor.setPower(right);
-        robot.rightMotor.setPower(right);
-
-        left = -gamepad1.right_stick_x;
-        robot.leftMotor.setPower(right);
-        robot.rightMotor.setPower(left);
-
-        right = -gamepad1.right_stick_x;
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
-
-        sweeper = -gamepad1.right_trigger;
-        robot.sweeperMoter.setPower(left);
-         */
-                //to find which way-joystick is x/y cancel one or the other.
-                // Use gamepad left & right Bumpers to open and close the claw
-                //if (gamepad1.right_bumper)
-                //clawOffset += CLAW_SPEED;
-                //else if (gamepad1.left_bumper)
-                //clawOffset -= CLAW_SPEED;
-
-                // Move both servos to new position.  Assume servos are mirror image of each other.
-                //clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-                //robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-                //robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
-
-                // Use gamepad buttons to move the arm up (Y) and down (A)
-                //if (gamepad1.y)
-                //robot.armMotor.setPower(robot.ARM_UP_POWER);
-                //else if (gamepad1.a)
-                //robot.armMotor.setPower(robot.ARM_DOWN_POWER);
-                //else
-
-                //robot.armMotor.setPower(0.0);
-
-                // Send telemetry message to signify robot running;
-                //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-                //        telemetry.addData("left", "%.2f", left);
-        //telemetry.addData("right", "%.2f", left);
-        //updateTelemetry(telemetry);
+    // The power range is -1 to 1 to avoid a hardware fault.
+    private double SafePower(double power)
+    {
+        if (power > 1) return 1;
+        if (power < -1) return -1;
+        return power;
     }
 
     /*

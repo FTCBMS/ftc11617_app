@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-//import com.google.blocks.ftcrobotcontroller.runtime.DcMotorAccess;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,27 +17,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class colbyPushBot
+public class colbyPushBotWithEncoder
 {
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
-    public DcMotor sweeperMoter = null;
-    public DcMotor elevaterMoter = null;
 
-    //public Servo    rightClaw   = null;
     public static final double MID_SERVO       =  0.5 ;
-    //public static final double ARM_DOWN_POWER  = -0.45 ;
+
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public colbyPushBot(){
+    public colbyPushBotWithEncoder(){
 
     }
 
@@ -50,7 +43,6 @@ public class colbyPushBot
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("left_drive");
         rightMotor  = hwMap.dcMotor.get("right_drive");
-        sweeperMoter = hwMap.dcMotor.get("sweeper_drive");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
@@ -60,16 +52,9 @@ public class colbyPushBot
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        sweeperMoter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // Define and initialize ALL installed servos.
-        //leftClaw = hwMap.servo.get("left_hand");
-        //rightClaw = hwMap.servo.get("right_hand");
-        //leftClaw.setPosition(MID_SERVO);
-        //rightClaw.setPosition(MID_SERVO);
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        //WHAT/HOW DO I RUN USING ENCODER
     }
 
     /***
@@ -79,15 +64,19 @@ public class colbyPushBot
      * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
      *
      * @param periodMs  Length of wait cycle in mSec.
-     * @throws InterruptedException
      */
-    public void waitForTick(long periodMs) throws InterruptedException {
+    public void waitForTick(long periodMs) {
 
         long  remaining = periodMs - (long)period.milliseconds();
 
         // sleep for the remaining portion of the regular cycle period.
-        if (remaining > 0)
-            Thread.sleep(remaining);
+        if (remaining > 0) {
+            try {
+                Thread.sleep(remaining);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
 
         // Reset the cycle clock for the next pass.
         period.reset();
