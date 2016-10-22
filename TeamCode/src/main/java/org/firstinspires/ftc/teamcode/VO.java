@@ -42,7 +42,6 @@ public class VO extends LinearOpMode {
         while (opModeIsActive()){
             for(VuforiaTrackable beac : beacons){
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
-
                 if(pose != null){
                     VectorF translation = pose.getTranslation();
 
@@ -51,11 +50,10 @@ public class VO extends LinearOpMode {
                     double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
 
                     telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
-               while (degreesToTurn <= 1) {
-                robot.rightMotor.setPower(0.5);
-               robot.leftMotor.setPower(-0.5);
-
-               }
+                    while (degreesToTurn <= 1) {
+                        robot.rightMotor.setPower(0.5);
+                        robot.leftMotor.setPower(-0.5);
+                    }
                }
             }
             telemetry.update();
