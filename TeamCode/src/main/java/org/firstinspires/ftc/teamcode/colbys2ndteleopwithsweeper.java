@@ -86,33 +86,33 @@ public class colbys2ndteleopwithsweeper extends OpMode{
         robot.leftMotor.setPower(left+right);
         robot.rightMotor.setPower(left-right);
 
-        if (gamepad1.right_trigger != 0) {
-            robot.sweeperMoter.setPower(1);
-        }
-        else if (gamepad1.left_trigger != 0) {
-            robot.sweeperMoter.setPower(0);
-        }
+        //if (gamepad1.right_trigger != 0) {
+            //robot.sweeperMoter.setPower(1);
+        //}
+        //else if (gamepad1.left_trigger != 0) {
+            //robot.sweeperMoter.setPower(0);
+       //}
 
-        if (gamepad2.left_stick_y < 0) { // pressed forward
-            robot.sweeperMoter.setPower(0.8);
-        }
-        else if (gamepad2.left_stick_y > 0) { // pressed backward
-            robot.sweeperMoter.setPower(0);
-        }
+        //if (gamepad2.left_stick_y < 0) { // pressed forward
+        //    robot.sweeperMoter.setPower(0.8);
+        //}
+        //else if (gamepad2.left_stick_y > 0) { // pressed backward
+          //  robot.sweeperMoter.setPower(0);
+        //}
         //elevator lift/storage
-        if (gamepad2.right_stick_y < 0) { // pressed forward
-            robot.elevaterMoter.setPower(0.50);
-        }
-        else if (gamepad2.right_stick_y > 0) { // pressed backward
-            robot.elevaterMoter.setPower(0);
-        }
-    }
+        //if (gamepad2.right_stick_y < 0) { // pressed forward
+      //      robot.elevaterMoter.setPower(0.50);
+        //}
+        ///else if (gamepad2.right_stick_y > 0) { // pressed backward
+           // robot.elevaterMoter.setPower(0);
+        //}
+    //}
 //om my gosh why wont this work
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
-    public void stop() {
+    //@Override
+   // public void stop() {
     }
 
 }
