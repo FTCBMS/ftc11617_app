@@ -30,6 +30,8 @@ public class VO extends LinearOpMode {
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
 
         VuforiaTrackables beacons = vuforia.loadTrackablesFromAsset("FTC_2016-17");
+        VuforiaTrackable[] trackables;
+
         beacons.get(0).setName("Wheels");
         beacons.get(1).setName("Tools");
         beacons.get(2).setName("Lego");
