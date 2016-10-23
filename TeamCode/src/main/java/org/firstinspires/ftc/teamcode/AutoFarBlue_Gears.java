@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
@@ -35,9 +36,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto", group="Pushbot")
-//@Disabled
-public class Auto extends LinearOpMode {
+@Autonomous(name="Blue Team: Gears_Beacon", group="BlueTeam")
+@Disabled
+public class AutoFarBlue_Gears extends LinearOpMode {
 
     /* Declare OpMode members. */
     Push robot = new Push();   // Use a Pushbot's hardware
@@ -48,9 +49,12 @@ public class Auto extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double DRIVE_SPEED = 0.6;
-    static final double TURN_SPEED = 0.8;
-    static final double WHITE_THRESHOLD = 0.3;
+    static final double DRIVE_SPEED = 0.8;
+    static final double TURN_SPEED = 0.6;
+    static final double WHITE = 0.3;
+    //not sure the value of RED, just a guess
+    static final double BLUELINE = 0.5;
+
     OpticalDistanceSensor odsSensor;
     TouchSensor touchSensor = null;
 
@@ -76,18 +80,19 @@ public class Auto extends LinearOpMode {
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
+        telemetry.addData("Start", "Motors starting at %7d :%7d",
                 robot.leftMotor.getCurrentPosition(),
                 robot.rightMotor.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        //begining turn
+        encoderDrive(TURN_SPEED, -4.5, 4.5, 4.0);
+        idle();
+        telemetry.addData("Turn", " executed!");
+
         OpticalDistanceSensor odsSensor;  // Hardware Device Object
-         double White = 0.3;
-
-
-        // get a reference to our Light Sensor object.
 
         robot.init(hardwareMap);
         odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
@@ -96,9 +101,19 @@ public class Auto extends LinearOpMode {
         waitForStart();
         // while the op mode is active, loop and read the light levels.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
-        robot.leftMotor.setPower(-0.2);
-        robot.rightMotor.setPower(-0.2);
-        while (odsSensor.getRawLightDetected() < White) {
+
+        runtime.reset();
+
+        while (runtime.seconds() < 1.5) {
+            robot.leftMotor.setPower(-0.6);
+            robot.rightMotor.setPower(-0.6);
+        }
+        runtime.reset();
+
+        robot.leftMotor.setPower(-0.6);
+        robot.rightMotor.setPower(-0.6);
+
+        while (odsSensor.getRawLightDetected() < WHITE) {
             //robot.rightMotor.setPower(-0.5); // This command doesn't need to happen in a while loop
             //robot.leftMotor.setPower(-0.5);
             // send the info back to driver station using telemetry function.
@@ -108,38 +123,69 @@ public class Auto extends LinearOpMode {
             telemetry.update();
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
+        telemetry.addData("Found", " the white line!");
         idle();
         idle();
-            encoderDrive(TURN_SPEED, -10, 10, 4.0);
-idle();
-idle();
-
-
-
-    // get a reference to our Light Sensor object.
-
-    touchSensor=hardwareMap.touchSensor.get("touchsensor");
-
-
-
+           telemetry.update();
+            encoderDrive(TURN_SPEED, -5.5, 5.5, 4.0);
+        telemetry.addData("Turn", " executed!");
+        idle();
+        idle();
+    telemetry.update();
+        touchSensor=hardwareMap.touchSensor.get("touchsensor");
     robot.leftMotor.setPower(-0.2);
     robot.rightMotor.setPower(-0.2);
-    while(!touchSensor.isPressed())
-
-    {
+    while(!touchSensor.isPressed()) {
         idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
     }
+        telemetry.addData("Beacon", " detected!");
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        /*PRESS BEACON HERE
 
-    stop();
-}
 
 
-        // Step through each leg of the path,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        */
+        //Back up to cap ball
+        //'Backing up', but I believe that the 11617 "Beacon Pusher" will be on the back, so @start, the sweeper is by the wall
+       while (runtime.seconds() < .4) {
+           robot.leftMotor.setPower(-.6);
+           robot.rightMotor.setPower(-.6);
+       }
+        encoderDrive(-TURN_SPEED, -4.5, 4.5, 4.0);
+        while (odsSensor.getLightDetected() < BLUELINE){
+            robot.leftMotor.setPower(.55);
+            robot.rightMotor.setPower(.55);
+        }
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        idle();
+        telemetry.addData("Red", " cap ball hit!");
+        stop();
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,  -10, 10, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout-7
-        /*stop();
-        /* while (opModeIsActive() && (odsSensor.getLightDetected() < WHITE_THRESHOLD)) {
+       /* encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(TURN_SPEED,  -10, 10, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout-7
+        stop();
+         while (opModeIsActive() && (odsSensor.getLightDetected() < WHITE_THRESHOLD)) {
             robot.leftMotor.setPower(0.8);
             robot.rightMotor.setPower(0.8);
         }
@@ -159,16 +205,16 @@ idle();
                 robot.rightMotor.setPower(0.2);
             }
         }
-       */            //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+       */
+                  //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);
         //sleep(1000);     // pause for servos to move
-/*
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+
+
     }
-*/
+
 
      /**  Method to perfmorm a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
