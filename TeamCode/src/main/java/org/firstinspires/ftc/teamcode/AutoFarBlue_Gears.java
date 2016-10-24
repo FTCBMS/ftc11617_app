@@ -36,9 +36,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Blue Team: Tools_Beacon", group="BlueTeam")
+@Autonomous(name="Blue Team: Gears_Beacon", group="BlueTeam")
 @Disabled
-public class AutoCloseBlue_Tools extends LinearOpMode {
+public class AutoFarBlue_Gears extends LinearOpMode {
 
     /* Declare OpMode members. */
     Push robot = new Push();   // Use a Pushbot's hardware
@@ -52,7 +52,7 @@ public class AutoCloseBlue_Tools extends LinearOpMode {
     static final double DRIVE_SPEED = 0.8;
     static final double TURN_SPEED = 0.6;
     static final double WHITE = 0.3;
-//not sure on the light level of GREY for the ods, so this is just a guess
+    //not sure the value of RED, just a guess
     static final double BLUELINE = 0.5;
 
     OpticalDistanceSensor odsSensor;
@@ -88,7 +88,7 @@ public class AutoCloseBlue_Tools extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //begining turn
-        encoderDrive(TURN_SPEED, -5, 5, 4.0);
+        encoderDrive(TURN_SPEED, -4.5, 4.5, 4.0);
         idle();
         telemetry.addData("Turn", " executed!");
 
@@ -127,7 +127,7 @@ public class AutoCloseBlue_Tools extends LinearOpMode {
         idle();
         idle();
            telemetry.update();
-            encoderDrive(TURN_SPEED, -5, 5, 4.0);
+            encoderDrive(TURN_SPEED, -5.5, 5.5, 4.0);
         telemetry.addData("Turn", " executed!");
         idle();
         idle();
@@ -167,34 +167,19 @@ public class AutoCloseBlue_Tools extends LinearOpMode {
         */
         //Back up to cap ball
         //'Backing up', but I believe that the 11617 "Beacon Pusher" will be on the back, so @start, the sweeper is by the wall
+       while (runtime.seconds() < .4) {
+           robot.leftMotor.setPower(-.6);
+           robot.rightMotor.setPower(-.6);
+       }
+        encoderDrive(-TURN_SPEED, -4.5, 4.5, 4.0);
         while (odsSensor.getLightDetected() < BLUELINE){
-            robot.leftMotor.setPower(.8);
-            robot.rightMotor.setPower(.8);
+            robot.leftMotor.setPower(.55);
+            robot.rightMotor.setPower(.55);
         }
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
         idle();
         telemetry.addData("Red", " cap ball hit!");
-        //turn to corner
-        encoderDrive(TURN_SPEED, -5, 5, 4.0);
-        while (odsSensor.getLightDetected() < BLUELINE) {
-            robot.leftMotor.setPower(-.8);
-            robot.rightMotor.setPower(-.8);
-        }
-        idle();
-        runtime.reset();
-        while (runtime.seconds() < 1) {
-            robot.leftMotor.setPower(-.3);
-            robot.rightMotor.setPower(-.3);
-        }
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
-        idle();
-        runtime.reset();
-        while (runtime.seconds() < 5) {
-            robot.sweep.setPower(-1);
-            robot.elevator.setPower(-1);
-        }
         stop();
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
        /* encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
