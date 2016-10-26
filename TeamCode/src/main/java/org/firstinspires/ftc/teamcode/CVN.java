@@ -134,20 +134,19 @@ public class CVN extends LinearOpMode {
          * documentation directory.
          */
         VuforiaTrackables wheelsAndGears = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
-        VuforiaTrackable WheelsAndGears0 = wheelsAndGears.get(0);
-        WheelsAndGears0.setName("RedTargetNear");  // wheels
+        VuforiaTrackable Wheels = wheelsAndGears.get(0);
+        Wheels.setName("RedTargetNear");  // wheels
 
-        VuforiaTrackable WheelsAndGears1  = wheelsAndGears.get(3);
-        WheelsAndGears1.setName("BlueTargetNear");  // gears
+        VuforiaTrackable Tools  = wheelsAndGears.get(1);
+        Tools.setName("BlueTargetFar");
 
-         //For convenience, gather together all the trackable objects in one easily-iterable collection
+        VuforiaTrackable Legos = wheelsAndGears.get(2);
+        Legos.setName("RedTargetFar");  // wheels
+
+        VuforiaTrackable Gears  = wheelsAndGears.get(3);
+        Gears.setName("BlueTargetNear");  // gears
+
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-
-        VuforiaTrackable LegosAndTools0 = wheelsAndGears.get(2);
-        LegosAndTools0.setName("RedTargetFar");  // wheels
-
-        VuforiaTrackable LegosAndTools1  = wheelsAndGears.get(1);
-        LegosAndTools1.setName("BlueTargetFar");  // gears
 
         allTrackables.addAll(wheelsAndGears);
         // For convenience, gather together all the trackable objects in one easily-iterable collection
@@ -231,7 +230,7 @@ public class CVN extends LinearOpMode {
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
-        WheelsAndGears1.setLocation(redTargetNearLocationOnField);
+        Wheels.setLocation(redTargetNearLocationOnField);
         RobotLog.ii(TAG, "Red Target Near=%s", format(redTargetNearLocationOnField));
 
         OpenGLMatrix redTargetFarLocationOnField = OpenGLMatrix
@@ -242,7 +241,7 @@ public class CVN extends LinearOpMode {
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
-       LegosAndTools0.setLocation(redTargetFarLocationOnField);
+       Legos.setLocation(redTargetFarLocationOnField);
         RobotLog.ii(TAG, "Red Target Far=%s", format(redTargetFarLocationOnField));
         /*
         * To place the Stones Target on the Blue Audience wall:
@@ -257,7 +256,7 @@ public class CVN extends LinearOpMode {
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 0, 0));
-        WheelsAndGears0.setLocation(blueTargetNearLocationOnField);
+        Gears.setLocation(blueTargetNearLocationOnField);
         RobotLog.ii(TAG, "Blue Target Near=%s", format(blueTargetNearLocationOnField));
 
         OpenGLMatrix blueTargetFarLocationOnField = OpenGLMatrix
@@ -268,7 +267,7 @@ public class CVN extends LinearOpMode {
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 0, 0));
-        LegosAndTools1.setLocation(blueTargetFarLocationOnField);
+        Tools.setLocation(blueTargetFarLocationOnField);
         RobotLog.ii(TAG, "Blue Target Far=%s", format(blueTargetFarLocationOnField));
         /**
          * Create a transformation matrix describing where the phone is on the robot. Here, we
@@ -294,10 +293,10 @@ public class CVN extends LinearOpMode {
          * listener is a {@link VuforiaTrackableDefaultListener} and can so safely cast because
          * we have not ourselves installed a listener of a different type.
          */
-        ((VuforiaTrackableDefaultListener)WheelsAndGears1.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)WheelsAndGears0.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)LegosAndTools0.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)LegosAndTools1.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)Wheels.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)Legos.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)Tools.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)Gears.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         /**
          * A brief tutorial: here's how all the math is going to work:
          *
@@ -339,6 +338,12 @@ public class CVN extends LinearOpMode {
                 if (robotLocationTransform != null) {
                     lastLocation = robotLocationTransform;
                 }
+
+// Update location if we have a new one.
+
+
+// Then you can extract the positions and angles using the getTranslation and getOrientation methods.
+
             }
 
              /* Provide feedback as to where the robot was last located (if we know).

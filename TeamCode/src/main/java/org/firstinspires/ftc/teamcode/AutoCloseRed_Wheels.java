@@ -2,9 +2,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -34,23 +36,29 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot:Auto", group="Pushbot")
-//@Disabled
-public class AutoEE extends LinearOpMode {
+@Autonomous(name="Red Team: Wheels_Beacon", group="RedTeam")
+@Disabled
+public class AutoCloseRed_Wheels extends LinearOpMode {
 
     /* Declare OpMode members. */
-    Push robot   = new Push();   // Use a Pushbot's hardware
+    Push robot = new Push();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.8;
-    static final double     WHITE_THRESHOLD = 900;
+    static final double DRIVE_SPEED = 0.8;
+    static final double TURN_SPEED = 0.6;
+    static final double WHITE = 0.3;
+//not sure on the light level of GREY for the ods, so this is just a guess
+    static final double REDLINE = 0.5;
+
     OpticalDistanceSensor odsSensor;
+    TouchSensor touchSensor = null;
+
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -72,22 +80,127 @@ public class AutoEE extends LinearOpMode {
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
+        telemetry.addData("Start", "Motors starting at %7d :%7d",
                 robot.leftMotor.getCurrentPosition(),
                 robot.rightMotor.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        //begining turn
+        encoderDrive(TURN_SPEED, 5, -5, 4.0);
+        idle();
+        telemetry.addData("Turn", " executed!");
 
-        // Step through each leg of the path,
+        OpticalDistanceSensor odsSensor;  // Hardware Device Object
+
+        robot.init(hardwareMap);
+        odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
+        odsSensor.enableLed(true);
+        // wait for the start button to be pressed.
+        waitForStart();
+        // while the op mode is active, loop and read the light levels.
+        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+
+        runtime.reset();
+
+        while (runtime.seconds() < 1.5) {
+            robot.leftMotor.setPower(-0.6);
+            robot.rightMotor.setPower(-0.6);
+        }
+        runtime.reset();
+
+        robot.leftMotor.setPower(-0.6);
+        robot.rightMotor.setPower(-0.6);
+
+        while (odsSensor.getRawLightDetected() < WHITE) {
+            //robot.rightMotor.setPower(-0.5); // This command doesn't need to happen in a while loop
+            //robot.leftMotor.setPower(-0.5);
+            // send the info back to driver station using telemetry function.
+            telemetry.addData("Raw", odsSensor.getRawLightDetected());
+            telemetry.addData("Normal", odsSensor.getLightDetected());
+
+            telemetry.update();
+            idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
+        }
+        telemetry.addData("Found", " the white line!");
+        idle();
+        idle();
+           telemetry.update();
+            encoderDrive(TURN_SPEED, 5, -5, 4.0);
+        telemetry.addData("Turn", " executed!");
+        idle();
+        idle();
+    telemetry.update();
+        touchSensor=hardwareMap.touchSensor.get("touchsensor");
+    robot.leftMotor.setPower(-0.2);
+    robot.rightMotor.setPower(-0.2);
+    while(!touchSensor.isPressed()) {
+        idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
+    }
+        telemetry.addData("Beacon", " detected!");
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        /*PRESS BEACON HERE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        */
+        //Back up to cap ball
+        //'Backing up', but I believe that the 11617 "Beacon Pusher" will be on the back, so @start, the sweeper is by the wall
+        while (odsSensor.getLightDetected() < REDLINE){
+            robot.leftMotor.setPower(.8);
+            robot.rightMotor.setPower(.8);
+        }
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        idle();
+        telemetry.addData("Red", " cap ball hit!");
+        //turn to corner
+        encoderDrive(TURN_SPEED, 5, -5, 4.0);
+        while (odsSensor.getLightDetected() < REDLINE) {
+            robot.leftMotor.setPower(-.8);
+            robot.rightMotor.setPower(-.8);
+        }
+        idle();
+        runtime.reset();
+        while (runtime.seconds() < 1) {
+            robot.leftMotor.setPower(-.3);
+            robot.rightMotor.setPower(-.3);
+        }
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        idle();
+        runtime.reset();
+        while (runtime.seconds() < 5) {
+            robot.sweep.setPower(-1);
+            robot.elevator.setPower(-1);
+        }
+        stop();
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  36,  36, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,  12, -12, 5.0);  // S2: Turn Right 12 Inches with 4 Sec timeout-7
-
-
-
-        while (opModeIsActive() && (odsSensor.getLightDetected() < WHITE_THRESHOLD)) {
+       /* encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(TURN_SPEED,  -10, 10, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout-7
+        stop();
+         while (opModeIsActive() && (odsSensor.getLightDetected() < WHITE_THRESHOLD)) {
             robot.leftMotor.setPower(0.8);
             robot.rightMotor.setPower(0.8);
         }
@@ -107,18 +220,18 @@ public class AutoEE extends LinearOpMode {
                 robot.rightMotor.setPower(0.2);
             }
         }
-                   //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+       */
+                  //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);
         //sleep(1000);     // pause for servos to move
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+
     }
 
-    /*
-     *  Method to perfmorm a relative move, based on encoder counts.
+
+     /**  Method to perfmorm a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
      *  Move will stop if any of three conditions occur:
      *  1) Move gets to the desired position
@@ -177,6 +290,7 @@ public class AutoEE extends LinearOpMode {
         }
     }
 }
+
 /*
 Copyright (c) 2016 Robert Atkinson
 
