@@ -63,8 +63,8 @@ public class AutoFarBlue_Gears extends LinearOpMode {
     ColorSensor rgbs = null;
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    static final double MAX_POS     =  .125;     // Maximum rotational position
+    static final double MIN_POS     =  -0.125;     // Minimum rotational position
 
     // Define class members
     Servo servo;
@@ -98,7 +98,7 @@ public class AutoFarBlue_Gears extends LinearOpMode {
                 robot.leftMotor.getCurrentPosition(),
                 robot.rightMotor.getCurrentPosition());
         telemetry.update();
-
+        servo.setPosition(0);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
@@ -162,24 +162,44 @@ public class AutoFarBlue_Gears extends LinearOpMode {
         robot.leftMotor.setPower(-0.2);
         robot.rightMotor.setPower(-0.2);
         while (!touchSensor.isPressed()) {
-            idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
+
         }
+
         telemetry.addData("Beacon", " detected!");
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
-
+        runtime.reset();
+        while (runtime.seconds() < 1) {
+            robot.leftMotor.setPower(.2);
+            robot.rightMotor.setPower(.2);
+        }
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
         if (color == "Red") {
             servo.setPosition(MAX_POS);
             idle();
-        }
-        if (color == "Blue") {
-            servo.setPosition(MIN_POS);
-        }
+            runtime.reset();
+            while (runtime.seconds() < 1) {
+                robot.leftMotor.setPower(-.2);
+                robot.rightMotor.setPower(-.2);
+            }
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+            if (color == "Blue") {
+                servo.setPosition(MIN_POS);
+                runtime.reset();
+                while (runtime.seconds() < 1) {
+                    robot.leftMotor.setPower(-.2);
+                    robot.rightMotor.setPower(-.2);
+                }
+            }
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
             //Back up to cap ball
             //'Backing up', but I believe that the 11617 "Beacon Pusher" will be on the back, so @start, the sweeper is by the wall
             while (runtime.seconds() < .4) {
-                robot.leftMotor.setPower(-.6);
-                robot.rightMotor.setPower(-.6);
+                robot.leftMotor.setPower(.6);
+                robot.rightMotor.setPower(.6);
             }
             encoderDrive(-TURN_SPEED, -4.5, 4.5, 4.0);
             while (odsSensor.getLightDetected() < BLUELINE) {
@@ -224,6 +244,7 @@ public class AutoFarBlue_Gears extends LinearOpMode {
 
 
         }
+    }
 
 
      /**  Method to perfmorm a relative move, based on encoder counts.
