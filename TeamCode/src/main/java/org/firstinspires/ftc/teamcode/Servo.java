@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * This OpMode scans a single servo back and forwards until Stop is pressed.
@@ -17,19 +19,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Autonomous(name = "Servo", group = "")
-//@Disabled
-public class Servo extends LinearOpMode {
 
-    static final double INCREMENT   = 0.1;     // amount to slew servo each CYCLE_MS cycle
+@Disabled
+public class SERVO extends LinearOpMode {
+
+    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double MAX_POS     =  1.0;     // Maximum rotational position
     static final double MIN_POS     =  0.0;     // Minimum rotational position
 
     // Define class members
-    com.qualcomm.robotcore.hardware.Servo servo;
+    Servo servo;
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
-    boolean armLeft = true;
+    boolean rampUp = true;
 
 
     @Override
@@ -49,12 +51,12 @@ public class Servo extends LinearOpMode {
         while(opModeIsActive()){
 
             // slew the servo, according to the rampUp (direction) variable.
-            if (armLeft) {
+            if (rampUp) {
                 // Keep stepping up until we hit the max value.
                 position += INCREMENT ;
                 if (position >= MAX_POS ) {
                     position = MAX_POS;
-                    armLeft = !armLeft;   // Switch ramp direction
+                    rampUp = !rampUp;   // Switch ramp direction
                 }
             }
             else {
@@ -62,7 +64,7 @@ public class Servo extends LinearOpMode {
                 position -= INCREMENT ;
                 if (position <= MIN_POS ) {
                     position = MIN_POS;
-                    armLeft = !armLeft;  // Switch ramp direction
+                    rampUp = !rampUp;  // Switch ramp direction
                 }
             }
 
