@@ -44,7 +44,18 @@ public class colbys2ndteleopwithsweeper extends OpMode{
 
     /* Declare OpMode members. */
     colbyPushBot robot       = new colbyPushBot(); // use the class created to define a Pushbot's hardware
-                                                         // could also use HardwarePushbotMatrix class.
+    static final double INCREMENT   = 0.1;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
+
+    static final double FOUR_FIVE     = -0.125;
+    static final double START     =  -0.25;
+    static final double ARM_UP     =  0.0;
+    // Define class members
+    com.qualcomm.robotcore.hardware.Servo servo;
+
+
 
 
     /*
@@ -82,10 +93,10 @@ public class colbys2ndteleopwithsweeper extends OpMode{
     public void loop() {
 
         double left = -gamepad1.left_stick_y;
-        double right = gamepad1.right_stick_x;
-        robot.leftMotor.setPower(left+right);
-        robot.rightMotor.setPower(left-right);
-
+        double right = -gamepad1.right_stick_y;
+        robot.leftMotor.setPower(left);
+        robot.rightMotor.setPower(right);
+        servo.setPosition(START);
         //if (gamepad1.right_trigger != 0) {
             //robot.sweeperMoter.setPower(1);
         //}
@@ -98,15 +109,14 @@ public class colbys2ndteleopwithsweeper extends OpMode{
         //}
         //else if (gamepad2.left_stick_y > 0) { // pressed backward
           //  robot.sweeperMoter.setPower(0);
-        //}
-        //elevator lift/storage
-        //if (gamepad2.right_stick_y < 0) { // pressed forward
-      //      robot.elevaterMoter.setPower(0.50);
-        //}
-        ///else if (gamepad2.right_stick_y > 0) { // pressed backward
-           // robot.elevaterMoter.setPower(0);
-        //}
-    //}
+        if (gamepad1.left_trigger != 0) {
+            servo.setPosition(FOUR_FIVE);
+        }
+
+        {
+            if (gamepad1.y)
+        servo.setPosition(FOUR_FIVE);
+        }
 //om my gosh why wont this work
     /*
      * Code to run ONCE after the driver hits STOP
