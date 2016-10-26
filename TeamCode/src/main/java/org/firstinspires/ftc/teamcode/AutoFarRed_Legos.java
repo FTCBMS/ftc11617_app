@@ -4,8 +4,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -57,7 +59,16 @@ public class AutoFarRed_Legos extends LinearOpMode {
 
     OpticalDistanceSensor odsSensor;
     TouchSensor touchSensor = null;
+    ColorSensor rgbs = null;
+    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double MAX_POS     =  .125;     // Maximum rotational position
+    static final double MIN_POS     =  -0.125;     // Minimum rotational position
 
+    // Define class members
+    Servo servo;
+    double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+    boolean rampUp = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -67,7 +78,8 @@ public class AutoFarRed_Legos extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-
+        rgbs = hardwareMap.colorSensor.get("colorsensor");
+        rgbs.enableLed(false);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
@@ -84,7 +96,21 @@ public class AutoFarRed_Legos extends LinearOpMode {
                 robot.leftMotor.getCurrentPosition(),
                 robot.rightMotor.getCurrentPosition());
         telemetry.update();
-
+        servo.setPosition(0);
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+        String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+        while (opModeIsActive()) {
+            telemetry.addData("Red", rgbs.red());
+            telemetry.addData("Green", rgbs.green());
+            telemetry.addData("Blue", rgbs.blue());
+            telemetry.addData("Clear", rgbs.alpha());
+            telemetry.addData("Color", color);
+            telemetry.update();
+            color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+            idle();
+        }
+        rgbs.enableLed(false);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         //begining turn
@@ -126,62 +152,66 @@ public class AutoFarRed_Legos extends LinearOpMode {
         telemetry.addData("Found", " the white line!");
         idle();
         idle();
-           telemetry.update();
-            encoderDrive(TURN_SPEED, 5.5, -5.5, 4.0);
+        telemetry.update();
+        encoderDrive(TURN_SPEED, 5.5, -5.5, 4.0);
         telemetry.addData("Turn", " executed!");
         idle();
         idle();
-    telemetry.update();
-        touchSensor=hardwareMap.touchSensor.get("touchsensor");
-    robot.leftMotor.setPower(-0.2);
-    robot.rightMotor.setPower(-0.2);
-    while(!touchSensor.isPressed()) {
-        idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
-    }
+        telemetry.update();
+        touchSensor = hardwareMap.touchSensor.get("touchsensor");
+        robot.leftMotor.setPower(-0.2);
+        robot.rightMotor.setPower(-0.2);
+        while (!touchSensor.isPressed()) {
+
+        }
+
         telemetry.addData("Beacon", " detected!");
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
-        /*PRESS BEACON HERE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        */
-        //Back up to cap ball
-        //'Backing up', but I believe that the 11617 "Beacon Pusher" will be on the back, so @start, the sweeper is by the wall
-       while (runtime.seconds() < .4) {
-           robot.leftMotor.setPower(-.6);
-           robot.rightMotor.setPower(-.6);
-       }
-        encoderDrive(-TURN_SPEED, 4.5, -4.5, 4.0);
-        while (odsSensor.getLightDetected() < REDLINE){
-            robot.leftMotor.setPower(.55);
-            robot.rightMotor.setPower(.55);
+        runtime.reset();
+        while (runtime.seconds() < 1) {
+            robot.leftMotor.setPower(.2);
+            robot.rightMotor.setPower(.2);
         }
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
-        idle();
-        telemetry.addData("Red", " cap ball hit!");
-        stop();
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        if (color == "Red") {
+            servo.setPosition(MAX_POS);
+            idle();
+            runtime.reset();
+            while (runtime.seconds() < 1) {
+                robot.leftMotor.setPower(-.2);
+                robot.rightMotor.setPower(-.2);
+            }
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+            if (color == "Blue") {
+                servo.setPosition(MIN_POS);
+                runtime.reset();
+                while (runtime.seconds() < 1) {
+                    robot.leftMotor.setPower(-.2);
+                    robot.rightMotor.setPower(-.2);
+                }
+            }
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+            //Back up to cap ball
+            //'Backing up', but I believe that the 11617 "Beacon Pusher" will be on the back, so @start, the sweeper is by the wall
+            while (runtime.seconds() < .4) {
+                robot.leftMotor.setPower(-.6);
+                robot.rightMotor.setPower(-.6);
+            }
+            encoderDrive(-TURN_SPEED, 4.5, -4.5, 4.0);
+            while (odsSensor.getLightDetected() < REDLINE) {
+                robot.leftMotor.setPower(.55);
+                robot.rightMotor.setPower(.55);
+            }
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+            idle();
+            telemetry.addData("Red", " cap ball hit!");
+            stop();
+            // Note: Reverse movement is obtained by setting a negative distance (not speed)
        /* encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         encoderDrive(TURN_SPEED,  -10, 10, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout-7
         stop();
@@ -206,15 +236,15 @@ public class AutoFarRed_Legos extends LinearOpMode {
             }
         }
        */
-                  //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+            //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
-        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        //robot.rightClaw.setPosition(0.0);
-        //sleep(1000);     // pause for servos to move
+            //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+            //robot.rightClaw.setPosition(0.0);
+            //sleep(1000);     // pause for servos to move
 
 
+        }
     }
-
 
      /**  Method to perfmorm a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
@@ -274,7 +304,21 @@ public class AutoFarRed_Legos extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
+public String getColorNameFromValues(int r, int g, int b) {
+    if (r >= 8 && g >= 8 && b >= 8) {
+        return "white";
+    }else if (r >= 6 && g <= 3 && b <= 3) {
+        return "red";
+    }else if (r <= 3 && g <= 3 && b >= 6) {
+        return "blue";
+    }else if (r <= 3 && g <= 3 && b <= 3) {
+        return "black";
+    }else{
+        return "other";
+    }
 }
+}
+
 
 /*
 Copyright (c) 2016 Robert Atkinson
