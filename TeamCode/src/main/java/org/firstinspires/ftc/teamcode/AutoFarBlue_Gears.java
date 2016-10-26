@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.SERVO;
+//import org.firstinspires.ftc.teamcode.SERVO;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.

@@ -26,6 +26,9 @@ public class Servo extends LinearOpMode {
     static final double MAX_POS     =  1.0;     // Maximum rotational position
     static final double MIN_POS     =  0.0;     // Minimum rotational position
 
+    static final double FOUR_FIVE     = -0.125;
+    static final double START     =  -0.25;
+    static final double ARM_UP     =  0.0;
     // Define class members
     com.qualcomm.robotcore.hardware.Servo servo;
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
@@ -47,7 +50,7 @@ public class Servo extends LinearOpMode {
 
         // Scan servo till stop pressed.
         while(opModeIsActive()){
-
+//IGNORE!!!!!!!!!!!!!!!!!!!!!!
             // slew the servo, according to the rampUp (direction) variable.
             if (armLeft) {
                 // Keep stepping up until we hit the max value.
