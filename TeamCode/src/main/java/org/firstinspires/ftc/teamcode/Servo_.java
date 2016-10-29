@@ -53,7 +53,7 @@ public class Servo_ extends LinearOpMode {
 
         // Scan servo till stop pressed.
         while(opModeIsActive()){
-//IGNORE!!!!!!!!!!!!!!!!!!!!!!
+            //IGNORE!
             // slew the servo, according to the rampUp (direction) variable.
             if (rampUp) {
                 // Keep stepping up until we hit the max value.
