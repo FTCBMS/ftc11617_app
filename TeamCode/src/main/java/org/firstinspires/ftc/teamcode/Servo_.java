@@ -19,9 +19,10 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-
+// Edited by Robbie. You had some conflicting class names (com.qualcomm.robotcore.hardware.Servo was confused with org.firstinspires.ftc.teamcode.Servo)
+@Autonomous(name="Servo test", group="Servo")
 @Disabled
-public class SERVO extends LinearOpMode {
+public class Servo_ extends LinearOpMode {
 
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
