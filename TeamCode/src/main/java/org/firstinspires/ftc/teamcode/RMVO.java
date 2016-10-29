@@ -56,15 +56,15 @@ public class RMVO extends LinearOpMode {
                         double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
                         telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
                         double positionOnScreen = translation.get(0);
-                        if (positionOnScreen > 20) { // Right side of screen
-                            robot.rightMotor.setPower(0.1);
-                            robot.leftMotor.setPower(0.2);
-                        }else if (positionOnScreen < -20 ){ // Left side of screen
+                        if (positionOnScreen > 10) { // Right side of screen
                             robot.rightMotor.setPower(0.2);
-                            robot.leftMotor.setPower(0.1);
+                            robot.leftMotor.setPower(0.6);
+                        }else if (positionOnScreen < -10 ){ // Left side of screen
+                            robot.rightMotor.setPower(0.6);
+                            robot.leftMotor.setPower(0.2);
                         }else{ // Near the middle
-                            robot.leftMotor.setPower(0.15);
-                            robot.rightMotor.setPower(0.15);
+                            robot.leftMotor.setPower(0.3);
+                            robot.rightMotor.setPower(0.3);
                         }
                     }else{
                         telemetry.addData("No image found", "");
