@@ -44,10 +44,10 @@ public class RMVO extends LinearOpMode {
 
         VuforiaTrackables beacons = vuforia.loadTrackablesFromAsset("FTC_2016-17");
 
-        beacons.get(0).setName("Wheels");
-        beacons.get(1).setName("Tools");
-        beacons.get(2).setName("Lego");
-        beacons.get(3).setName("Gears");
+        beacons.get(0).setName("Gears");
+//        beacons.get(1).setName("Tools");
+//        beacons.get(2).setName("Lego");
+//        beacons.get(3).setName("Wheels");
 
         enableEncoders();
         waitForStart();
