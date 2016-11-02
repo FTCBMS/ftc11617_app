@@ -44,10 +44,10 @@ public class RMVO extends LinearOpMode {
 
         VuforiaTrackables beacons = vuforia.loadTrackablesFromAsset("FTC_2016-17");
 
-        beacons.get(0).setName("Gears");
+//        beacons.get(0).setName("Wheels");
 //        beacons.get(1).setName("Tools");
-//        beacons.get(2).setName("Lego");
-//        beacons.get(3).setName("Wheels");
+//        beacons.get(2).setName("Legos");
+          beacons.get(3).setName("Gears");
 
         enableEncoders();
         waitForStart();
@@ -61,9 +61,9 @@ public class RMVO extends LinearOpMode {
             enableEncoders();
             encoderDrive(TURN_SPEED, 5, -5, 4.0);
             disableEncoders();
-            int i = 0;
+            int i = 3;
             for (VuforiaTrackable beac : beacons) {
-                if (i == 0) {
+                if (i == 3) {
                     OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
                     if (pose != null) {
                         VectorF translation = pose.getTranslation();
