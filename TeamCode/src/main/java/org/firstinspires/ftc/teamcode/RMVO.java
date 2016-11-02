@@ -49,19 +49,18 @@ public class RMVO extends LinearOpMode {
         beacons.get(2).setName("Lego");
         beacons.get(3).setName("Gears");
 
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        enableEncoders();
         waitForStart();
-        // The following awesome code is created by Robbie Moore.
-        // Copyright (c) 2016 Robbie Moore.
         beacons.activate();
-        encoderDrive(TURN_SPEED,   5, -5, 4.0);
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        whole_thing:while (opModeIsActive()) {
-            robot.rightMotor.setPower(0.2);
-            robot.leftMotor.setPower(0.2);
+        encoderDrive(TURN_SPEED, 5, -5, 4.0);
+        disableEncoders();
+        whole_thing: while (opModeIsActive()) {
+            robot.tankDrive(0.4);
+            sleep(4000);
+            robot.tankDrive(0);
+            enableEncoders();
+            encoderDrive(TURN_SPEED, 5, -5, 4.0);
+            disableEncoders();
             int i = 0;
             for (VuforiaTrackable beac : beacons) {
                 if (i == 0) {
@@ -114,7 +113,14 @@ public class RMVO extends LinearOpMode {
         }
         stop();
     }
-
+    public void enableEncoders() {
+        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void disableEncoders() {
+        robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
     public double clamp(double x, double min, double max) {
         return Math.min(max, Math.max(min, x));
     }

@@ -72,6 +72,14 @@ public class RMHardwarePushbot
         //rightClaw.setPosition(MID_SERVO);
     }
 
+    public void tankDrive(double leftMotorPower, double rightMotorPower) {
+        leftMotor.setPower(leftMotorPower);
+        rightMotor.setPower(rightMotorPower);
+    }
+    public void tankDrive(double motorPower) { // Function overloading
+        leftMotor.setPower(motorPower);
+        rightMotor.setPower(motorPower);
+    }
     /***
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
