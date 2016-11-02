@@ -43,25 +43,25 @@ public class RMVO extends LinearOpMode {
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
 
         VuforiaTrackables beacons = vuforia.loadTrackablesFromAsset("FTC_2016-17");
-
-//        beacons.get(0).setName("Wheels");
-//        beacons.get(1).setName("Tools");
-//        beacons.get(2).setName("Legos");
-          beacons.get(3).setName("Gears");
+        beacons.get(0).setName("Wheels");
+        beacons.get(1).setName("Tools");
+        beacons.get(2).setName("Legos");
+        beacons.get(3).setName("Gears");
+        waitForStart();
 
         enableEncoders();
-        waitForStart();
         beacons.activate();
         encoderDrive(TURN_SPEED, 5, -5, 4.0);
         disableEncoders();
+        robot.tankDrive(0.4);
+        sleep(4000);
+        robot.tankDrive(0);
+        enableEncoders();
+        encoderDrive(TURN_SPEED, 5, -5, 4.0);
+        disableEncoders();
+        robot.tankDrive(0);
         whole_thing: while (opModeIsActive()) {
-            robot.tankDrive(0.4);
-            sleep(4000);
-            robot.tankDrive(0);
-            enableEncoders();
-            encoderDrive(TURN_SPEED, 5, -5, 4.0);
-            disableEncoders();
-            int i = 3;
+            int i = 0;
             for (VuforiaTrackable beac : beacons) {
                 if (i == 3) {
                     OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
@@ -102,8 +102,7 @@ public class RMVO extends LinearOpMode {
                         sleep(200);
                     } else {
                         telemetry.addData("No image found", "");
-                        robot.leftMotor.setPower(0.2);
-                        robot.rightMotor.setPower(0.2);
+                        robot.tankDrive(0);
                     }
                 }
                 i++;
