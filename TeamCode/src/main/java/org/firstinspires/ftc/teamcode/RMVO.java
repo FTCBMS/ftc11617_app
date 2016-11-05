@@ -29,7 +29,7 @@ public class RMVO extends LinearOpMode {
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
+    static final double TURN_SPEED = 0.25;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,21 +49,29 @@ public class RMVO extends LinearOpMode {
         beacons.get(3).setName("Gears");
         waitForStart();
 
-        enableEncoders();
         beacons.activate();
+        enableEncoders();
         encoderDrive(TURN_SPEED, 5, -5, 4.0);
         disableEncoders();
         robot.tankDrive(0.4);
-        sleep(4000);
+        sleep(2500);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED, 5, -5, 4.0);
+        encoderDrive(TURN_SPEED, -5, 5, 4.0);
+        disableEncoders();
+        robot.tankDrive(0.4);
+        sleep(2500);
+        robot.tankDrive(0);
+        enableEncoders();
+        encoderDrive(TURN_SPEED, 10, -10, 4.0);
         disableEncoders();
         robot.tankDrive(0);
+
+        // 45, forward for 0.75s, -45, forward 2.5s, 90
         whole_thing: while (opModeIsActive()) {
             int i = 0;
             for (VuforiaTrackable beac : beacons) {
-                if (i == 3) {
+                if (i < 4) {
                     OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
                     if (pose != null) {
                         VectorF translation = pose.getTranslation();
