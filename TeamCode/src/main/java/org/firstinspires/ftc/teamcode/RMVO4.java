@@ -21,13 +21,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
 
-//Out Start, In Beacon
+//In Start, Out Beacon
 
 
 
 
-@Autonomous(name="RMVO2", group="Vuforia")
-public class RMVO2 extends LinearOpMode {
+@Autonomous(name="RMVO4", group="Vuforia")
+public class RMVO4 extends LinearOpMode {
     RMHardwarePushbot robot = new RMHardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -58,24 +58,24 @@ public class RMVO2 extends LinearOpMode {
         waitForStart();
 
         beacons.activate();
-//        robot.tankDrive(0.4);
-//        sleep(300);
-//        robot.tankDrive(0);
+        //robot.tankDrive(0.4);
+       //sleep(300);
+       // robot.tankDrive(0);
 //        enableEncoders();
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
         robot.tankDrive(0.4);
-        sleep(4000);
+        sleep(5000);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED, 3, -3, 4.0);
+        encoderDrive(TURN_SPEED, 7.5, -7.5, 4.0);
         disableEncoders();
-       // robot.tankDrive(0.4);
-      //  sleep(3250);
-        //robot.tankDrive(0);
-        //enableEncoders();
-       // encoderDrive(TURN_SPEED, 8, -8, 4.0);
-        //disableEncoders();
+//        robot.tankDrive(0.4);
+//        sleep(3250);
+//        robot.tankDrive(0);
+//        enableEncoders();
+ //       encoderDrive(TURN_SPEED, 8, -8, 4.0);
+ //       disableEncoders();
         robot.tankDrive(0);
 
         // 45, forward for 0.75s, -45, forward 2.5s, 90

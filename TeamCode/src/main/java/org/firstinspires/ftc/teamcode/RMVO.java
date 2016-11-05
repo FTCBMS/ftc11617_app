@@ -18,6 +18,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 /**
  * Created by Windows on 2016-09-19.
  */
+
+
+
+//Out Start, Out Beacon
+
+
+
+
 @Autonomous(name="RMVO", group="Vuforia")
 public class RMVO extends LinearOpMode {
     RMHardwarePushbot robot = new RMHardwarePushbot();
