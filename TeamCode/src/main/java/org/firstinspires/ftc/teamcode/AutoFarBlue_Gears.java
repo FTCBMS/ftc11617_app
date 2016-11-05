@@ -83,6 +83,7 @@ public class AutoFarBlue_Gears extends LinearOpMode {
         rgbs = hardwareMap.colorSensor.get("colorsensor");
         rgbs.enableLed(false);
         // Send telemetry message to signify robot waiting;
+
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 

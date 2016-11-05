@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,8 +19,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 /**
  * Created by Windows on 2016-09-19.
  */
-@Autonomous(name="RMVO", group="Vuforia")
-public class RMVO extends LinearOpMode {
+@Autonomous(name="EEAUTO", group="Vuforia")
+//@Disabled
+public class EEAUTO extends LinearOpMode {
     RMHardwarePushbot robot = new RMHardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -29,8 +31,19 @@ public class RMVO extends LinearOpMode {
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 0.6;
-    static final double TURN_SPEED = 0.4;
-
+    static final double TURN_SPEED = 0.5;
+    boolean blueTeam = false;
+    boolean redTeam = false;
+    boolean pos1 = false;
+    boolean pos2 = false;
+    boolean pos3 = false;
+    boolean pos4 = false;
+    boolean wheelsImage = false;
+    boolean toolsImage = false;
+    boolean legosImage = false;
+    boolean gearsImage = false;
+    boolean center = false;
+    boolean corner = false;
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
@@ -39,42 +52,84 @@ public class RMVO extends LinearOpMode {
         params.vuforiaLicenseKey = "AfQTqo//////AAAAGavZWqzkWk2doCWRXf8Y5Vc3FRE8eVl+2UyeBBNtFWIOdD1y0yVVXsz9vSOQKnpzt/QTHaHe+wQ/ulCYHGMxLWC7rtTBI7+bmWCTlOm8Sz9iZLiQAZZxedoDVzoPjTepbhHJBipbxmUrqPhpp/cyIAqqP0w9pfGzX+0r7aJP8RU2Fvayqe5pr6B3WK91sHOkuhL0SV6bQGqjcnetWvgBs+pDJm/PQon8QKQXw3w0cbJhyd+P2w1Gr92w+ZX6ctJh0AkCKz4KIvkh6fd1ND/qNGmp0mDHwOhIwuZIIeNjmBDYYIOfWH3l4F4HQHWmVGhIwV19woHA0PyCWJODyXCdSt3olvtBSz3cJj42AFIRXITI";
         params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
 
+        if (gamepad1.left_bumper) {
+            blueTeam = true;
+            telemetry.addData("", "BLUE TEAM");
+        }
+        if (gamepad1.right_bumper) {
+            redTeam = true;
+            telemetry.addData("", "RED TEAM");
+        }
+        if (gamepad1.dpad_up) {
+            pos1 = true;
+            telemetry.addData("", "POSITION 1");
+        }
+        if (gamepad1.dpad_left) {
+            pos2 = true;
+            telemetry.addData("", "POSITION 2");
+        }
+        if (gamepad1.dpad_right) {
+            pos3 = true;
+            telemetry.addData("", "POSITION 3");
+        }
+        if (gamepad1.dpad_down) {
+            pos4 = true;
+            telemetry.addData("", "POSITION 4");
+        }
+        if (gamepad1.a) {
+            toolsImage = true;
+            telemetry.addData("", "TOOLS");
+        }
+        if (gamepad1.b) {
+            legosImage = true;
+            telemetry.addData("", "LEGOS");
+        }
+        if (gamepad1.x) {
+            gearsImage = true;
+            telemetry.addData("", "GEARS");
+        }
+        if (gamepad1.y) {
+            wheelsImage = true;
+            telemetry.addData("", "WHEELS");
+        }
+        if (gamepad1.left_trigger == 1) {
+            center = true;
+            telemetry.addData("", "CENTER VORTEX");
+        }
+        if (gamepad1.right_trigger == 1) {
+            corner = true;
+            telemetry.addData("", "CORNER VORTEX");
+        }
+
+
+
+
         VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(params);
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
 
         VuforiaTrackables beacons = vuforia.loadTrackablesFromAsset("FTC_2016-17");
+
         beacons.get(0).setName("Wheels");
         beacons.get(1).setName("Tools");
-        beacons.get(2).setName("Legos");
+        beacons.get(2).setName("Lego");
         beacons.get(3).setName("Gears");
+
+        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         waitForStart();
-
+        // The following awesome code is created by Robbie Moore.
+        // Copyright (c) 2016 Robbie Moore.
         beacons.activate();
-//        robot.tankDrive(0.4);
-//        sleep(300);
-//        robot.tankDrive(0);
-//        enableEncoders();
-//        encoderDrive(TURN_SPEED, 6, -6, 4.0);
-//        disableEncoders();
-        robot.tankDrive(0.4);
-        sleep(2750);
-        robot.tankDrive(0);
-        enableEncoders();
-        encoderDrive(TURN_SPEED, -6, 6, 4.0);
-        disableEncoders();
-        robot.tankDrive(0.4);
-        sleep(3250);
-        robot.tankDrive(0);
-        enableEncoders();
-        encoderDrive(TURN_SPEED, 8, -8, 4.0);
-        disableEncoders();
-        robot.tankDrive(0);
-
-        // 45, forward for 0.75s, -45, forward 2.5s, 90
-        whole_thing: while (opModeIsActive()) {
+        encoderDrive(TURN_SPEED,   5, -5, 4.0);
+        robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        whole_thing:while (opModeIsActive()) {
+            robot.rightMotor.setPower(0.2);
+            robot.leftMotor.setPower(0.2);
             int i = 0;
             for (VuforiaTrackable beac : beacons) {
-                if (i < 4) {
+                if (i == 0) {
                     OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
                     if (pose != null) {
                         VectorF translation = pose.getTranslation();
@@ -86,14 +141,11 @@ public class RMVO extends LinearOpMode {
                         telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
                         double positionOnScreen = translation.get(1); // = translation.get(0) for upright phones
                         // ^^ IMPORTANT ^^: phone must be right-side-down or it will move away from the picture!
-                        double adjust = positionOnScreen / 170;
-                        adjust = clamp(adjust, 0, 0.2);
-                        if (translation.get(2) < -350) { // If z axis (distance) > ~8in (approx.)
-                            robot.rightMotor.setPower(0.2667 - adjust);
-                            robot.leftMotor.setPower(0.2667 + adjust);
-                        } else if (translation.get(2) < -100) {
-                            robot.leftMotor.setPower((0.2667 - adjust) * 0.3);
-                            robot.rightMotor.setPower((0.2667 + adjust) * 0.3);
+                        double adjust = positionOnScreen / 70;
+                        adjust = clamp(adjust, -0.2, 0.3);
+                        if (translation.get(2) < -300) { // If z axis (distance) > ~8in (approx.)
+                            robot.rightMotor.setPower(0.4 - adjust);
+                            robot.leftMotor.setPower(0.4 + adjust);
                         } else {
                             robot.rightMotor.setPower(0);
                             robot.leftMotor.setPower(0);
@@ -113,10 +165,11 @@ public class RMVO extends LinearOpMode {
                         for (int j=0;j<idles;j++) {
                             idle();
                         }*/
-                        sleep(150);
+                        sleep(200);
                     } else {
                         telemetry.addData("No image found", "");
-                        robot.tankDrive(0);
+                        robot.leftMotor.setPower(0.2);
+                        robot.rightMotor.setPower(0.2);
                     }
                 }
                 i++;
@@ -126,14 +179,7 @@ public class RMVO extends LinearOpMode {
         }
         stop();
     }
-    public void enableEncoders() {
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-    public void disableEncoders() {
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
+
     public double clamp(double x, double min, double max) {
         return Math.min(max, Math.max(min, x));
     }
