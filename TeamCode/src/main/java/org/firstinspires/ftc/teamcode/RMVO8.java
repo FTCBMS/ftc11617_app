@@ -26,7 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
 
-@Autonomous(name="RMVO4", group="Vuforia")
+@Autonomous(name="RMVO8", group="Vuforia")
 public class RMVO8 extends LinearOpMode {
     RMHardwarePushbot robot = new RMHardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();

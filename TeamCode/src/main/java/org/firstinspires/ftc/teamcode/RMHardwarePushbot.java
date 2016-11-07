@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -37,6 +38,10 @@ public class RMHardwarePushbot
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
+    public Servo servo;
+
+
+
     /* Constructor */
     public RMHardwarePushbot(){
 
@@ -50,7 +55,7 @@ public class RMHardwarePushbot
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("left_drive");
         rightMotor  = hwMap.dcMotor.get("right_drive");
-        //armMotor    = hwMap.dcMotor.get("left_arm");
+        servo    = hwMap.servo.get("servo");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
