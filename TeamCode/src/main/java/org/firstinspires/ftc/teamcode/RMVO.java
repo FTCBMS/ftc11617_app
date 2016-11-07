@@ -132,6 +132,7 @@ public class RMVO extends LinearOpMode {
             telemetry.update();
             idle();
         }
+
         stop();
     }
     public void enableEncoders() {

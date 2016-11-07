@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
@@ -38,7 +40,9 @@ public class RMVO4 extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.4;
+    ColorSensor rgbs = null;
 
+    Servo servo;
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
@@ -55,6 +59,20 @@ public class RMVO4 extends LinearOpMode {
         beacons.get(1).setName("Tools");
         beacons.get(2).setName("Legos");
         beacons.get(3).setName("Gears");
+        servo.setPosition(1);
+        String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+        while (opModeIsActive()) {
+            telemetry.addData("Red", rgbs.red());
+            telemetry.addData("Green", rgbs.green());
+            telemetry.addData("Blue", rgbs.blue());
+            telemetry.addData("Clear", rgbs.alpha());
+            telemetry.addData("Color", color);
+            telemetry.update();
+            color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+            idle();
+        }
+        rgbs = hardwareMap.colorSensor.get("colorsensor");
+        rgbs.enableLed(true);
         waitForStart();
 
         beacons.activate();
@@ -132,6 +150,30 @@ public class RMVO4 extends LinearOpMode {
             telemetry.update();
             idle();
         }
+        if (color == "red" ) {
+            servo.setPosition(1);
+            telemetry.addData("", "Red Detected");
+            robot.leftMotor.setPower(-0.2);
+            robot.rightMotor.setPower(-0.2);
+            sleep(1000);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+        }
+        else if (color == "blue" ){
+            servo.setPosition(0);
+            telemetry.addData("", "Blue Detected");
+            robot.leftMotor.setPower(-0.2);
+            robot.rightMotor.setPower(-0.2);
+            sleep(1000);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+        }
+        else {
+            robot.leftMotor.setPower(0.2);
+            sleep(1000);
+            robot.leftMotor.setPower(0);
+        }
+        rgbs.enableLed(false);
         stop();
     }
     public void enableEncoders() {
@@ -187,5 +229,28 @@ public class RMVO4 extends LinearOpMode {
             }
 
         }
+    }
+
+
+
+    public String getColorNameFromValues(int r, int g, int b) {
+        if (r >= 8 && g >= 8 && b >= 8) {
+            return "white";
+        }else if (r >= 6 && g <= 3 && b <= 3) {
+            return "red";
+        }else if (r <= 3 && g <= 3 && b >= 6) {
+            return "blue";
+        }else if (r <= 3 && g <= 3 && b <= 3) {
+            return "black";
+        }else{
+            return "other";
+        }
+
+
+
+
+
+
+
     }
 }

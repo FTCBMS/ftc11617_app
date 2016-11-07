@@ -32,18 +32,34 @@ public class EEAUTO extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
+
     boolean blueTeam = false;
     boolean redTeam = false;
-    boolean pos1 = false;
-    boolean pos2 = false;
-    boolean pos3 = false;
-    boolean pos4 = false;
+    boolean position1 = false;
+    boolean position2 = false;
+    boolean position3 = false;
+    boolean position4 = false;
     boolean wheelsImage = false;
     boolean toolsImage = false;
     boolean legosImage = false;
     boolean gearsImage = false;
-    boolean center = false;
-    boolean corner = false;
+    boolean centerVortex = false;
+    boolean cornerVortex = false;
+
+    public EEAUTO(boolean blue, boolean red, boolean pos1, boolean pos2, boolean pos3, boolean pos4, boolean wheels, boolean tools, boolean legos, boolean gears, boolean center, boolean corner){
+        blueTeam = blue;
+        redTeam = red;
+        position1 = pos1;
+        position2 = pos2;
+        position3 = pos3;
+        position4 = pos4;
+        wheelsImage = wheels;
+        toolsImage = tools;
+        legosImage = legos;
+        gearsImage = gears;
+        centerVortex = center;
+        cornerVortex = corner;
+    }
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
@@ -61,20 +77,20 @@ public class EEAUTO extends LinearOpMode {
             telemetry.addData("", "RED TEAM");
         }
         if (gamepad1.dpad_up) {
-            pos1 = true;
-            telemetry.addData("", "POSITION 1");
+            position1 = true;
+            telemetry.addData("STARt", "POSITION 1");
         }
         if (gamepad1.dpad_left) {
-            pos2 = true;
-            telemetry.addData("", "POSITION 2");
+            position2 = true;
+            telemetry.addData("START", "POSITION 2");
         }
         if (gamepad1.dpad_right) {
-            pos3 = true;
-            telemetry.addData("", "POSITION 3");
+            position3 = true;
+            telemetry.addData("START", "POSITION 3");
         }
         if (gamepad1.dpad_down) {
-            pos4 = true;
-            telemetry.addData("", "POSITION 4");
+            position4 = true;
+            telemetry.addData("START", "POSITION 4");
         }
         if (gamepad1.a) {
             toolsImage = true;
@@ -93,11 +109,11 @@ public class EEAUTO extends LinearOpMode {
             telemetry.addData("", "WHEELS");
         }
         if (gamepad1.left_trigger == 1) {
-            center = true;
+            centerVortex = true;
             telemetry.addData("", "CENTER VORTEX");
         }
         if (gamepad1.right_trigger == 1) {
-            corner = true;
+            cornerVortex = true;
             telemetry.addData("", "CORNER VORTEX");
         }
 
@@ -113,7 +129,7 @@ public class EEAUTO extends LinearOpMode {
         beacons.get(1).setName("Tools");
         beacons.get(2).setName("Lego");
         beacons.get(3).setName("Gears");
-
+/*
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -160,11 +176,11 @@ public class EEAUTO extends LinearOpMode {
                         }else{ // Near the middle
                             robot.leftMotor.setPower(0.5);
                             robot.rightMotor.setPower(0.5);
-                        }*/
+                        }
                         /*int idles = 0;
                         for (int j=0;j<idles;j++) {
                             idle();
-                        }*/
+                        }
                         sleep(200);
                     } else {
                         telemetry.addData("No image found", "");
@@ -225,5 +241,6 @@ public class EEAUTO extends LinearOpMode {
             }
 
         }
+    */
     }
 }
