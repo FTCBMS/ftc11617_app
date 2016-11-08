@@ -147,15 +147,14 @@ public class RMVO4 extends LinearOpMode {
         telemetry.addData("Blue", rgbs.blue());
         telemetry.addData("Clear", rgbs.alpha());
         telemetry.addData("Color", color);
-        telemetry.update();
+        //telemetry.update();
         //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
         idle();
-        telemetry.update();
         if (color == "red" ) {
             robot.servo.setPosition(1);
             telemetry.addData("", "Red Detected");
-            robot.leftMotor.setPower(-0.2);
-            robot.rightMotor.setPower(-0.2);
+            robot.leftMotor.setPower(0.2);
+            robot.rightMotor.setPower(0.2);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
@@ -163,17 +162,17 @@ public class RMVO4 extends LinearOpMode {
         else if (color == "blue" ){
             robot.servo.setPosition(0);
             telemetry.addData("", "Blue Detected");
-            robot.leftMotor.setPower(-0.2);
-            robot.rightMotor.setPower(-0.2);
+            robot.leftMotor.setPower(0.2);
+            robot.rightMotor.setPower(0.2);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
         }
         else {
             telemetry.addData("", "No blue or red detected");
-            robot.leftMotor.setPower(0.2);
+            robot.leftMotor.setPower(-0.2);
             sleep(1000);
-            robot.leftMotor.setPower(0);
+            robot.leftMotor.setPower(-0.2);
         }
         telemetry.update();
         rgbs.enableLed(false);
@@ -239,9 +238,9 @@ public class RMVO4 extends LinearOpMode {
     public String getColorNameFromValues(int r, int g, int b) {
         if (r >= 8 && g >= 8 && b >= 8) {
             return "white";
-        }else if (r >= 6 && g <= 3 && b <= 3) {
+        }else if (r >= 4 && g <= 3 && b <= 3) {
             return "red";
-        }else if (r <= 3 && g <= 3 && b >= 6) {
+        }else if (r <= 3 && g <= 3 && b >= 4) {
             return "blue";
         }else if (r <= 3 && g <= 3 && b <= 3) {
             return "black";
