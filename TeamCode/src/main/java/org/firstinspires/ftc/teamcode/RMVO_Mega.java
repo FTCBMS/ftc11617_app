@@ -20,14 +20,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 
-//INVERSE OF RMVO_Mega
+
 //Out Start, Out Beacon
 
 
 
 
-@Autonomous(name="RMVO5", group="Vuforia")
-public class RMVO5 extends LinearOpMode {
+@Autonomous(name="RMVO_Mega", group="Vuforia")
+public class RMVO_Mega extends LinearOpMode {
     RMHardwarePushbot robot = new RMHardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -38,6 +38,8 @@ public class RMVO5 extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.4;
+
+    static final int VERSION_NUMBER = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,7 +70,7 @@ public class RMVO5 extends LinearOpMode {
         sleep(2750);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED, 6, -6, 4.0);
+        encoderDrive(TURN_SPEED, -6, 6, 4.0);
         disableEncoders();
         robot.tankDrive(0.4);
         sleep(3250);
