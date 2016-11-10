@@ -66,17 +66,77 @@ public class RMVO_Mega extends LinearOpMode {
 //        enableEncoders();
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
-        robot.tankDrive(0.4);
-        sleep(2750);
-        robot.tankDrive(0);
-        enableEncoders();
-        encoderDrive(TURN_SPEED, -6, 6, 4.0);
-        disableEncoders();
-        robot.tankDrive(0.4);
-        sleep(3250);
-        robot.tankDrive(0);
-        enableEncoders();
-        encoderDrive(TURN_SPEED, 8, -8, 4.0);
+        switch (VERSION_NUMBER) {
+            case 1:
+                robot.tankDrive(0.4);
+                sleep(2750);
+                robot.tankDrive(0);
+                enableEncoders();
+                encoderDrive(TURN_SPEED, -6, 6, 4.0);
+                disableEncoders();
+                robot.tankDrive(0.4);
+                sleep(3250);
+                robot.tankDrive(0);
+                enableEncoders();
+                encoderDrive(TURN_SPEED, 8, -8, 4.0);
+                break;
+            case 2:
+                robot.tankDrive(0.4);
+                sleep(4000);
+                robot.tankDrive(0);
+                enableEncoders();
+                encoderDrive(TURN_SPEED, 3, -3, 4.0);
+                break;
+            case 3:
+                robot.tankDrive(0.4);
+                sleep(2500);
+                robot.tankDrive(0);
+                enableEncoders();
+                encoderDrive(TURN_SPEED, 6, -6, 4.0);
+                break;
+            case 4:
+                robot.tankDrive(0.4);
+                sleep(5000);
+                robot.tankDrive(0);
+                enableEncoders();
+                encoderDrive(TURN_SPEED, 7.5, -7.5, 4.0);
+                break;
+            case 5:
+                robot.tankDrive(0.4);
+                sleep(2750);
+                robot.tankDrive(0);
+                enableEncoders();
+                encoderDrive(TURN_SPEED, 6, -6, 4.0);
+                disableEncoders();
+                robot.tankDrive(0.4);
+                sleep(3250);
+                robot.tankDrive(0);
+                enableEncoders();
+                encoderDrive(TURN_SPEED, 8, -8, 4.0);
+                break;
+            case 6:
+                robot.tankDrive(0.4);
+                sleep(4000);
+                robot.tankDrive(0);
+                enableEncoders();
+                encoderDrive(TURN_SPEED, -3, 3, 4.0);
+                disableEncoders();
+                break;
+            case 7:
+                robot.tankDrive(0.4);
+                sleep(2500);
+                robot.tankDrive(0);
+                enableEncoders();
+                encoderDrive(TURN_SPEED, -6, 6, 4.0);
+                break;
+            case 8:
+                robot.tankDrive(0.4);
+                sleep(5000);
+                robot.tankDrive(0);
+                enableEncoders();
+                encoderDrive(TURN_SPEED, -7.5, 7.5, 4.0);
+                break;
+        }
         disableEncoders();
         robot.tankDrive(0);
 
