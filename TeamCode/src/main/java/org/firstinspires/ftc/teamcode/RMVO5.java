@@ -240,7 +240,7 @@ public class RMVO5 extends LinearOpMode {
             telemetry.update();
             idle();
         }
-        String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+        color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
 
         telemetry.addData("Red", rgbs.red());
         telemetry.addData("Green", rgbs.green());
