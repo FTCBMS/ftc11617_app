@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name="TeleOp w/ Sweeper, Elevator, and Launcher", group="11617 TeleOp")
-@Disabled
+//@Disabled
 public class TeleEE extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -82,26 +82,26 @@ public class TeleEE extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-            left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
+            left = -(gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y));
+            right = -(gamepad1.right_stick_y * Math.abs(gamepad1.right_stick_y));
 
 
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
 
             if (gamepad2.left_bumper) {
-                robot.sweep.setPower(0.8);
-                robot.elevator.setPower(0.8);
+                robot.sweepAndElevator.setPower(0.8);
+
             }
             if (gamepad2.right_bumper) {
-                robot.sweep.setPower(-0.8);
-                robot.elevator.setPower(-0.8);
+                robot.sweepAndElevator.setPower(-0.8);
+
                }
             if (gamepad2.a) {
-                robot.sweep.setPower(0);
-                robot.elevator.setPower(0);
+                robot.sweepAndElevator.setPower(0);
+
             }
-            if  (gamepad2.left_stick_button) {
+            /*if  (gamepad2.left_stick_button) {
                 robot.launcherPart1.setPower(1);
                 robot.launcherPart2.setPower(-1);
             }
@@ -109,7 +109,7 @@ public class TeleEE extends LinearOpMode {
                 robot.launcherPart1.setPower(0);
                 robot.launcherPart2.setPower(0);
             }
-                // Use gamepad left & right Bumpers to open and close the claw
+             */   // Use gamepad left & right Bumpers to open and close the claw
                 //   if (gamepad1.right_bumper)
                 //      clawOffset += CLAW_SPEED;
                 //  else if (gamepad1.left_bumper)

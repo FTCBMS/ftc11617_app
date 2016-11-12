@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.HINT;
@@ -38,7 +39,7 @@ public class RMVO2 extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.4;
-
+    ColorSensor rgbs = null;
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
@@ -55,6 +56,9 @@ public class RMVO2 extends LinearOpMode {
         beacons.get(1).setName("Tools");
         beacons.get(2).setName("Legos");
         beacons.get(3).setName("Gears");
+        rgbs = hardwareMap.colorSensor.get("colorsensor");
+        rgbs.enableLed(false);
+        robot.servo.setPosition(1);
         waitForStart();
 
         beacons.activate();
@@ -92,16 +96,17 @@ public class RMVO2 extends LinearOpMode {
                         telemetry.addData("Z offset (?)", translation.get(2));
                         double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
                         telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
+                        telemetry.update();
                         double positionOnScreen = translation.get(1); // = translation.get(0) for upright phones
                         // ^^ IMPORTANT ^^: phone must be right-side-down or it will move away from the picture!
                         double adjust = positionOnScreen / 170;
-                        adjust = clamp(adjust, 0, 0.2);
+                        adjust = clamp(adjust, 0, 0.175);
                         if (translation.get(2) < -350) { // If z axis (distance) > ~8in (approx.)
                             robot.rightMotor.setPower(0.2667 - adjust);
                             robot.leftMotor.setPower(0.2667 + adjust);
-                        } else if (translation.get(2) < -100) {
-                            robot.leftMotor.setPower((0.2667 - adjust) * 0.3);
-                            robot.rightMotor.setPower((0.2667 + adjust) * 0.3);
+                        } else if (translation.get(2) < -75) {
+                            robot.leftMotor.setPower((0.2667 - (adjust - 0.1) * 0.3));
+                            robot.rightMotor.setPower((0.2667 + (adjust) - 0.1) * 0.3);
                         } else {
                             robot.rightMotor.setPower(0);
                             robot.leftMotor.setPower(0);
@@ -132,6 +137,47 @@ public class RMVO2 extends LinearOpMode {
             telemetry.update();
             idle();
         }
+        telemetry.update();
+        String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+
+        telemetry.addData("Red", rgbs.red());
+        telemetry.addData("Green", rgbs.green());
+        telemetry.addData("Blue", rgbs.blue());
+        telemetry.addData("Clear", rgbs.alpha());
+        telemetry.addData("Color", color);
+        //telemetry.update();
+        //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+        idle();
+        if (color == "red" ) {
+            robot.servo.setPosition(1);
+            telemetry.addData("", "Red Detected");
+            robot.leftMotor.setPower(0.2);
+            robot.rightMotor.setPower(0.2);
+            sleep(1000);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+        }
+        if (color == "blue" ){
+            robot.servo.setPosition(0);
+            telemetry.addData("", "Blue Detected");
+            robot.leftMotor.setPower(0.2);
+            robot.rightMotor.setPower(0.2);
+            sleep(1000);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+        }
+        else {
+            telemetry.addData("", "No blue or red detected");
+            //robot.leftMotor.setPower(-0.2);
+            //robot.rightMotor.setPower(-0.2);
+            sleep(2000);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+        }
+        telemetry.update();
+        telemetry.update();
+        sleep(10000);
+        rgbs.enableLed(false);
         stop();
     }
     public void enableEncoders() {
@@ -187,5 +233,29 @@ public class RMVO2 extends LinearOpMode {
             }
 
         }
+    }
+
+
+    public String getColorNameFromValues(int r, int g, int b) {
+        //if (r >= 8 && g >= 8 && b >= 8) {
+        //    return "white";
+        //}
+        if (r >= 2) {
+            return "red";
+        }else if (b >= 2) {
+            return "blue";
+        }//else if (r <= 3 && g <= 3 && b <= 3) {
+        // return "black";
+        //}
+        else{
+            return "other";
+        }
+
+
+
+
+
+
+
     }
 }
