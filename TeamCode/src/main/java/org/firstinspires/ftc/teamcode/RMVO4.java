@@ -73,7 +73,7 @@ public class RMVO4 extends LinearOpMode {
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
         robot.tankDrive(0.4);
-        sleep(5000);
+        sleep(4900);
         robot.tankDrive(0);
         enableEncoders();
         encoderDrive(TURN_SPEED, 7.5, -7.5, 4.0);
@@ -87,6 +87,8 @@ public class RMVO4 extends LinearOpMode {
         robot.tankDrive(0);
 
         // 45, forward for 0.75s, -45, forward 2.5s, 90
+
+
         whole_thing: while (opModeIsActive()) {
             int i = 0;
             for (VuforiaTrackable beac : beacons) {
@@ -100,16 +102,17 @@ public class RMVO4 extends LinearOpMode {
                         telemetry.addData("Z offset (?)", translation.get(2));
                         double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
                         telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
+                        telemetry.update();
                         double positionOnScreen = translation.get(1); // = translation.get(0) for upright phones
                         // ^^ IMPORTANT ^^: phone must be right-side-down or it will move away from the picture!
                         double adjust = positionOnScreen / 170;
-                        adjust = clamp(adjust, 0, 0.2);
+                        adjust = clamp(adjust, 0, 0.175);
                         if (translation.get(2) < -350) { // If z axis (distance) > ~8in (approx.)
                             robot.rightMotor.setPower(0.2667 - adjust);
                             robot.leftMotor.setPower(0.2667 + adjust);
-                        } else if (translation.get(2) < -100) {
-                            robot.leftMotor.setPower((0.2667 - adjust) * 0.3);
-                            robot.rightMotor.setPower((0.2667 + adjust) * 0.3);
+                        } else if (translation.get(2) < -75) {
+                            robot.leftMotor.setPower((0.2667 - (adjust - 0.1) * 0.3));
+                            robot.rightMotor.setPower((0.2667 + (adjust) - 0.1) * 0.3);
                         } else {
                             robot.rightMotor.setPower(0);
                             robot.leftMotor.setPower(0);
@@ -140,6 +143,7 @@ public class RMVO4 extends LinearOpMode {
             telemetry.update();
             idle();
         }
+        telemetry.update();
         String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
 
         telemetry.addData("Red", rgbs.red());
@@ -159,7 +163,7 @@ public class RMVO4 extends LinearOpMode {
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
         }
-        else if (color == "blue" ){
+        if (color == "blue" ){
             robot.servo.setPosition(0);
             telemetry.addData("", "Blue Detected");
             robot.leftMotor.setPower(0.2);
@@ -170,14 +174,18 @@ public class RMVO4 extends LinearOpMode {
         }
         else {
             telemetry.addData("", "No blue or red detected");
-            robot.leftMotor.setPower(-0.2);
-            sleep(1000);
-            robot.leftMotor.setPower(-0.2);
+            //robot.leftMotor.setPower(-0.2);
+            //robot.rightMotor.setPower(-0.2);
+            sleep(2000);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
         }
         telemetry.update();
+        telemetry.update();
+        sleep(10000);
         rgbs.enableLed(false);
         stop();
-    }
+}
     public void enableEncoders() {
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -234,17 +242,18 @@ public class RMVO4 extends LinearOpMode {
     }
 
 
-
     public String getColorNameFromValues(int r, int g, int b) {
-        if (r >= 8 && g >= 8 && b >= 8) {
-            return "white";
-        }else if (r >= 4 && g <= 3 && b <= 3) {
+        //if (r >= 8 && g >= 8 && b >= 8) {
+        //    return "white";
+        //}
+        if (r >= 2) {
             return "red";
-        }else if (r <= 3 && g <= 3 && b >= 4) {
+        }else if (b >= 2) {
             return "blue";
-        }else if (r <= 3 && g <= 3 && b <= 3) {
-            return "black";
-        }else{
+        }//else if (r <= 3 && g <= 3 && b <= 3) {
+        // return "black";
+        //}
+        else{
             return "other";
         }
 
