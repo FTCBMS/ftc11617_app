@@ -28,8 +28,8 @@ public class Push
     //public DcMotor  armMotor    = null;
     //public Servo    leftClaw    = null;
     //public Servo    rightClaw   = null;
-    public DcMotor sweep =null;
-    public DcMotor elevator =null;
+    public DcMotor sweepAndElevator =null;
+
     public DcMotor launcherPart1 =null;
     public DcMotor launcherPart2 =null;
     public static final double MID_SERVO       =  0.5 ;
@@ -53,8 +53,8 @@ public class Push
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("left_drive");
         rightMotor  = hwMap.dcMotor.get("right_drive");
-        sweep = hwMap.dcMotor.get("sweep_motor");
-        elevator = hwMap.dcMotor.get("elevator_motor");
+        sweepAndElevator = hwMap.dcMotor.get("sweeper");
+
         launcherPart1 = hwMap.dcMotor.get("launch1");
         launcherPart2 = hwMap.dcMotor.get("launch2");
         //armMotor    = hwMap.dcMotor.get("left_arm");
@@ -65,8 +65,8 @@ public class Push
         leftMotor.setPower(0);
         rightMotor.setPower(0);
         //armMotor.setPower(0);
-        sweep.setPower(0);
-        elevator.setPower(0);
+        sweepAndElevator.setPower(0);
+
         launcherPart1.setPower(0);
         launcherPart2.setPower(0);
         // Set all motors to run without encoders.
@@ -76,8 +76,8 @@ public class Push
         //armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         launcherPart1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         launcherPart2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        sweep.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        elevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        sweepAndElevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         // Define and initialize ALL installed servos.
         //leftClaw = hwMap.servo.get("left_hand");
         //rightClaw = hwMap.servo.get("right_hand");
