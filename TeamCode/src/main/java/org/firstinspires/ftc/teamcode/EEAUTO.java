@@ -133,7 +133,7 @@ public class EEAUTO extends LinearOpMode {
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        waitForStart();
+        waitForStart();`
         // The following awesome code is created by Robbie Moore.
         // Copyright (c) 2016 Robbie Moore.
         beacons.activate();
