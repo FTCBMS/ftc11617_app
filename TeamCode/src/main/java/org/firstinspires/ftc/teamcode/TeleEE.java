@@ -99,9 +99,18 @@ public class TeleEE extends LinearOpMode {
             //robot.launcherPart1.setPower(launch);
             //robot.launcherPart2.setPower(launch);
 
-            robot.sweepAndElevator.setPower(activateSweeperAndElevator);
-            robot.sweepAndElevator.setPower(reverseSweeperAndElevator);
-//            if (gamepad2.b && pressed == false) {
+
+            if (gamepad2.left_trigger > 0 && gamepad2.left_bumper == false) {
+                robot.sweepAndElevator.setPower(1);
+            }
+            if (gamepad2.left_trigger > 0 && gamepad2.left_bumper == true) {
+                robot.sweepAndElevator.setPower(-1);
+            }
+            else {
+                robot.sweepAndElevator.setPower(0);
+            }
+//
+//if (gamepad2.b && pressed == false) {
 //                robot.sweepAndElevator.setPower(-activateSweeperAndElevator);
 //                pressed = true;
 //            }
