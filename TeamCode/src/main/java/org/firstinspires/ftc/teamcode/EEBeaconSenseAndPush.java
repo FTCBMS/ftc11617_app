@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
+@Disabled
 @Autonomous(name="Beac", group="Beac")
 public class EEBeaconSenseAndPush extends LinearOpMode{
     RMHardwarePushbot robot = new RMHardwarePushbot();

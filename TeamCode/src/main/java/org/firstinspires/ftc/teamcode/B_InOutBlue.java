@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
@@ -22,13 +23,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
 
-//Out Start, In Beacon
+//In Start, Out Beacon
 
 
 
 
-@Autonomous(name="RMVO2", group="Vuforia")
-public class RMVO2 extends LinearOpMode {
+@Autonomous(name="In, Out, Team Blue", group="Vuforia: Team Blue")
+public class B_InOutBlue extends LinearOpMode {
     RMHardwarePushbot robot = new RMHardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -40,6 +41,8 @@ public class RMVO2 extends LinearOpMode {
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.4;
     ColorSensor rgbs = null;
+
+    //Servo servo;
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
@@ -61,28 +64,31 @@ public class RMVO2 extends LinearOpMode {
         robot.servo.setPosition(1);
         waitForStart();
 
+
         beacons.activate();
-//        robot.tankDrive(0.4);
-//        sleep(300);
-//        robot.tankDrive(0);
+        //robot.tankDrive(0.4);
+       //sleep(300);
+       // robot.tankDrive(0);
 //        enableEncoders();
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
         robot.tankDrive(0.4);
-        sleep(4000);
+        sleep(4900);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED, 3, -3, 4.0);
+        encoderDrive(TURN_SPEED, 7.5, -7.5, 4.0);
         disableEncoders();
-       // robot.tankDrive(0.4);
-      //  sleep(3250);
-        //robot.tankDrive(0);
-        //enableEncoders();
-       // encoderDrive(TURN_SPEED, 8, -8, 4.0);
-        //disableEncoders();
+//        robot.tankDrive(0.4);
+//        sleep(3250);
+//        robot.tankDrive(0);
+//        enableEncoders();
+ //       encoderDrive(TURN_SPEED, 8, -8, 4.0);
+ //       disableEncoders();
         robot.tankDrive(0);
 
         // 45, forward for 0.75s, -45, forward 2.5s, 90
+
+
         whole_thing: while (opModeIsActive()) {
             int i = 0;
             for (VuforiaTrackable beac : beacons) {
@@ -149,7 +155,8 @@ public class RMVO2 extends LinearOpMode {
         //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
         idle();
         if (color == "red" ) {
-            robot.servo.setPosition(1);
+            robot.servo.setPosition(0);
+            idle();
             telemetry.addData("", "Red Detected");
             robot.leftMotor.setPower(0.2);
             robot.rightMotor.setPower(0.2);
@@ -158,7 +165,8 @@ public class RMVO2 extends LinearOpMode {
             robot.rightMotor.setPower(0);
         }
         if (color == "blue" ){
-            robot.servo.setPosition(0);
+            robot.servo.setPosition(1);
+            idle();
             telemetry.addData("", "Blue Detected");
             robot.leftMotor.setPower(0.2);
             robot.rightMotor.setPower(0.2);
@@ -179,7 +187,7 @@ public class RMVO2 extends LinearOpMode {
         sleep(10000);
         rgbs.enableLed(false);
         stop();
-    }
+}
     public void enableEncoders() {
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

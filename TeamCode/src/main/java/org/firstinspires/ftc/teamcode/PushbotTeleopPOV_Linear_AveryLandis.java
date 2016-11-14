@@ -54,7 +54,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @TeleOp(name="Pushbot: Teleop POV avery", group="Pushbot")
-//@Disabled
+@Disabled
 public class PushbotTeleopPOV_Linear_AveryLandis extends LinearOpMode {
 
     /* Declare OpMode members. */
