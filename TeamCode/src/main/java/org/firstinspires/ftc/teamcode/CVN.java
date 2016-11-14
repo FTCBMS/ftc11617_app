@@ -81,9 +81,9 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 @Autonomous(name="CVN", group ="Vuforia")
-//@Disabled
+@Disabled
 public class CVN extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";

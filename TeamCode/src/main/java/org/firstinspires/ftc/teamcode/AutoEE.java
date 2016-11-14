@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
@@ -36,7 +37,7 @@ import com.qualcomm.robotcore.
  */
 
 @Autonomous(name="Pushbot:Auto", group="Pushbot")
-//@Disabled
+@Disabled
 public class AutoEE extends LinearOpMode {
 
     /* Declare OpMode members. */

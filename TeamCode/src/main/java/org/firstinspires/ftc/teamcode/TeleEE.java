@@ -65,6 +65,11 @@ public class TeleEE extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         double left;
         double right;
+        //double launch;
+        double activateSweeperAndElevator;
+        double reverseSweeperAndElevator;
+        boolean pressed = false;
+        boolean moved = false;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -82,65 +87,69 @@ public class TeleEE extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-            left = -(gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y));
-            right = -(gamepad1.right_stick_y * Math.abs(gamepad1.right_stick_y));
-
+            left = -gamepad1.left_stick_y;
+            right = -gamepad1.right_stick_y;
+          //  launch = gamepad2.right_trigger;
+            activateSweeperAndElevator = gamepad2.left_trigger;
+            reverseSweeperAndElevator = gamepad2.right_trigger;
 
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
 
-            if (gamepad2.left_bumper) {
-                robot.sweepAndElevator.setPower(0.8);
+            //robot.launcherPart1.setPower(launch);
+            //robot.launcherPart2.setPower(launch);
 
-            }
-            if (gamepad2.right_bumper) {
-                robot.sweepAndElevator.setPower(-0.8);
+            robot.sweepAndElevator.setPower(activateSweeperAndElevator);
+            robot.sweepAndElevator.setPower(reverseSweeperAndElevator);
+//            if (gamepad2.b && pressed == false) {
+//                robot.sweepAndElevator.setPower(-activateSweeperAndElevator);
+//                pressed = true;
+//            }
+//            if (gamepad2.b && pressed == true) {
+//                robot.sweepAndElevator.setPower(activateSweeperAndElevator);
+//                pressed = false;
+//            }
+           // if (gamepad2.a && moved == false) {
+             //   robot.servo.setPosition(0);
+               // pressed = true;
+            //}
+            //if (gamepad2.a && moved == true) {
+              //  robot.servo.setPosition(1);
+                //pressed = false;
+          //  }
+            // Use gamepad left & right Bumpers to open and close the claw
+            //   if (gamepad1.right_bumper)
+            //      clawOffset += CLAW_SPEED;
+            //  else if (gamepad1.left_bumper)
+            //   clawOffset -= CLAW_SPEED;
 
-               }
-            if (gamepad2.a) {
-                robot.sweepAndElevator.setPower(0);
+            // Move both servos to new position.  Assume servos are mirror image of each other.
+            //    clawOffset = Range.clip(clawOffset, -0.5, 0.5);
+            //robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
+            //robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
-            }
-            /*if  (gamepad2.left_stick_button) {
-                robot.launcherPart1.setPower(1);
-                robot.launcherPart2.setPower(-1);
-            }
-            if  (gamepad2.right_stick_button) {
-                robot.launcherPart1.setPower(0);
-                robot.launcherPart2.setPower(0);
-            }
-             */   // Use gamepad left & right Bumpers to open and close the claw
-                //   if (gamepad1.right_bumper)
-                //      clawOffset += CLAW_SPEED;
-                //  else if (gamepad1.left_bumper)
-                //   clawOffset -= CLAW_SPEED;
+            // Use gamepad buttons to move arm up (Y) and down (A)
+            //if (gamepad1.y)
+            //robot.armMotorPushbotAutoDriveByTime_Linear.setPower(robot.ARM_UP_POWER);
+            // else if (gamepad1.a)
+            //robot.armMotor.setPower(robot.ARM_DOWN_POWER);
+            // else
+            //robot.armMotor.setPower(0.0);
 
-                // Move both servos to new position.  Assume servos are mirror image of each other.
-                //    clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-                //robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-                //robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
+            // Send telemetry message to signify robot running;
+            //    telemetry.addData("claw",  "Offset = %.2f", clawOffset);
 
-                // Use gamepad buttons to move arm up (Y) and down (A)
-                //if (gamepad1.y)
-                //robot.armMotorPushbotAutoDriveByTime_Linear.setPower(robot.ARM_UP_POWER);
-                // else if (gamepad1.a)
-                //robot.armMotor.setPower(robot.ARM_DOWN_POWER);
-                // else
-                //robot.armMotor.setPower(0.0);
+            telemetry.addData("left", "%.2f", left);
+            telemetry.addData("right", "%.2f", right);
 
-                // Send telemetry message to signify robot running;
-                //    telemetry.addData("claw",  "Offset = %.2f", clawOffset);
+            telemetry.update();
 
-                telemetry.addData("left", "%.2f", left);
-                telemetry.addData("right", "%.2f", right);
+            // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
+            robot.waitForTick(40);
 
-                telemetry.update();
 
-                // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-                robot.waitForTick(40);
-
-            }
 
         }
+        stop();
     }
-
+}

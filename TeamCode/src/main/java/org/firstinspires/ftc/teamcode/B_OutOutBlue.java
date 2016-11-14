@@ -21,14 +21,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 
-//INVERSE OF RMVO_Mega
 //Out Start, Out Beacon
 
 
-
-
-@Autonomous(name="RMVO5", group="Vuforia")
-public class RMVO5 extends LinearOpMode {
+@Autonomous(name = "Out, Out, Team Blue", group = "Vuforia: Team Blue")
+public class B_OutOutBlue extends LinearOpMode {
     RMHardwarePushbot robot = new RMHardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -40,6 +37,7 @@ public class RMVO5 extends LinearOpMode {
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.4;
     ColorSensor rgbs = null;
+
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
@@ -72,18 +70,18 @@ public class RMVO5 extends LinearOpMode {
         sleep(2750);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED, 5, -5, 4.0);
+        encoderDrive(TURN_SPEED, -6, 6, 4.0);
         disableEncoders();
         robot.tankDrive(0.4);
-        sleep(3250);//3000
+        sleep(3250);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED, -8, 8, 4.0);
+        encoderDrive(TURN_SPEED, 8, -8, 4.0);
         disableEncoders();
         robot.tankDrive(0);
-
-        // 45, forward for 0.75s, -45, forward 2.5s, 90
-        whole_thing: while (opModeIsActive()) {
+        //VuforiaTracker tracker = new VuforiaTracker(telemetry, robot, beacons);
+        whole_thing:
+        while (opModeIsActive()) {
             int i = 0;
             for (VuforiaTrackable beac : beacons) {
                 if (i < 4) {
@@ -105,7 +103,7 @@ public class RMVO5 extends LinearOpMode {
                             robot.rightMotor.setPower(0.2667 - adjust);
                             robot.leftMotor.setPower(0.2667 + adjust);
                         } else if (translation.get(2) < -75) {
-                            robot.leftMotor.setPower((0.2667 - (adjust - 0.1) * 0.3));
+                            robot.leftMotor.setPower((0.2667 - (adjust) - 0.1) * 0.3);
                             robot.rightMotor.setPower((0.2667 + (adjust) - 0.1) * 0.3);
                         } else {
                             robot.rightMotor.setPower(0);
@@ -137,121 +135,17 @@ public class RMVO5 extends LinearOpMode {
             telemetry.update();
             idle();
         }
-        telemetry.update();
         String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
 
         telemetry.addData("Red", rgbs.red());
         telemetry.addData("Green", rgbs.green());
-        telemetry.addData("Blue", rgbs.blue());
-        telemetry.addData("Clear", rgbs.alpha());
-        telemetry.addData("Color", color);
-        //telemetry.update();
-        //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
-        idle();
-        if (color == "red" ) {
-            robot.servo.setPosition(1);
-            telemetry.addData("", "Red Detected");
-            robot.leftMotor.setPower(0.2);
-            robot.rightMotor.setPower(0.2);
-            sleep(1000);
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
-        }
-        if (color == "blue" ){
-            robot.servo.setPosition(0);
-            telemetry.addData("", "Blue Detected");
-            robot.leftMotor.setPower(0.2);
-            robot.rightMotor.setPower(0.2);
-            sleep(1000);
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
-        }
-        else {
-            telemetry.addData("", "No blue or red detected");
-            //robot.leftMotor.setPower(-0.2);
-            //robot.rightMotor.setPower(-0.2);
-            sleep(2000);
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
-        }
-        robot.tankDrive(-0.4);
-        sleep(1500);
-        enableEncoders();
-        encoderDrive(TURN_SPEED, -9, 9, 4.0);
-        disableEncoders();
-        robot.tankDrive(0.4);
-        sleep(3000);
-        enableEncoders();
-        encoderDrive(TURN_SPEED, 9, -9, 4.0);
-        telemetry.update();
-        sleep(10000);
-        rgbs.enableLed(false);
-        whole_thing: while (opModeIsActive()) {
-            int i = 0;
-            for (VuforiaTrackable beac : beacons) {
-                if (i < 4) {
-                    OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
-                    if (pose != null) {
-                        VectorF translation = pose.getTranslation();
-                        telemetry.addData(beac.getName() + "-Translation", translation);
-                        telemetry.addData("X offset", translation.get(0));
-                        telemetry.addData("Y offset", translation.get(1));
-                        telemetry.addData("Z offset (?)", translation.get(2));
-                        double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
-                        telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
-                        telemetry.update();
-                        double positionOnScreen = translation.get(1); // = translation.get(0) for upright phones
-                        // ^^ IMPORTANT ^^: phone must be right-side-down or it will move away from the picture!
-                        double adjust = positionOnScreen / 170;
-                        adjust = clamp(adjust, 0, 0.175);
-                        if (translation.get(2) < -350) { // If z axis (distance) > ~8in (approx.)
-                            robot.rightMotor.setPower(0.2667 - adjust);
-                            robot.leftMotor.setPower(0.2667 + adjust);
-                        } else if (translation.get(2) < -75) {
-                            robot.leftMotor.setPower((0.2667 - (adjust - 0.1) * 0.3));
-                            robot.rightMotor.setPower((0.2667 + (adjust) - 0.1) * 0.3);
-                        } else {
-                            robot.rightMotor.setPower(0);
-                            robot.leftMotor.setPower(0);
-                            break whole_thing;
-                        }
-                        /* (positionOnScreen > 10) { // Right side of screen
-                            robot.rightMotor.setPower(0.3);
-                            robot.leftMotor.setPower(0.9);
-                        }else if (positionOnScreen < -10 ){ // Left side of screen
-                            robot.rightMotor.setPower(0.9);
-                            robot.leftMotor.setPower(0.3);
-                        }else{ // Near the middle
-                            robot.leftMotor.setPower(0.5);
-                            robot.rightMotor.setPower(0.5);
-                        }*/
-                        /*int idles = 0;
-                        for (int j=0;j<idles;j++) {
-                            idle();
-                        }*/
-                        sleep(150);
-                    } else {
-                        telemetry.addData("No image found", "");
-                        robot.tankDrive(0);
-                    }
-                }
-                i++;
-            }
-            telemetry.update();
-            idle();
-        }
-        color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
-
-        telemetry.addData("Red", rgbs.red());
         telemetry.addData("Green", rgbs.green());
         telemetry.addData("Blue", rgbs.blue());
         telemetry.addData("Clear", rgbs.alpha());
         telemetry.addData("Color", color);
-        //telemetry.update();
-        //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
-        idle();
-        if (color == "red" ) {
-            robot.servo.setPosition(1);
+        if (color == "red") {
+            robot.servo.setPosition(0);
+            idle();
             telemetry.addData("", "Red Detected");
             robot.leftMotor.setPower(0.2);
             robot.rightMotor.setPower(0.2);
@@ -259,16 +153,16 @@ public class RMVO5 extends LinearOpMode {
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
         }
-        if (color == "blue" ){
-            robot.servo.setPosition(0);
+        if (color == "blue") {
+            robot.servo.setPosition(1);
+            idle();
             telemetry.addData("", "Blue Detected");
             robot.leftMotor.setPower(0.2);
             robot.rightMotor.setPower(0.2);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
-        }
-        else {
+        } else {
             telemetry.addData("", "No blue or red detected");
             //robot.leftMotor.setPower(-0.2);
             //robot.rightMotor.setPower(-0.2);
@@ -276,16 +170,22 @@ public class RMVO5 extends LinearOpMode {
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
         }
+        telemetry.update();
+        sleep(10000);
+        rgbs.enableLed(false);
         stop();
     }
+
     public void enableEncoders() {
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
     public void disableEncoders() {
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
     public double clamp(double x, double min, double max) {
         return Math.min(max, Math.max(min, x));
     }
@@ -340,19 +240,14 @@ public class RMVO5 extends LinearOpMode {
         //}
         if (r >= 2) {
             return "red";
-        }else if (b >= 2) {
+        } else if (b >= 2) {
             return "blue";
         }//else if (r <= 3 && g <= 3 && b <= 3) {
         // return "black";
         //}
-        else{
+        else {
             return "other";
         }
-
-
-
-
-
 
 
     }

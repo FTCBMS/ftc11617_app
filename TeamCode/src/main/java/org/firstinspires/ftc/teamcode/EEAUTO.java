@@ -20,7 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Windows on 2016-09-19.
  */
 @Autonomous(name="EEAUTO", group="Vuforia")
-//@Disabled
+@Disabled
 public class EEAUTO extends LinearOpMode {
     RMHardwarePushbot robot = new RMHardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();

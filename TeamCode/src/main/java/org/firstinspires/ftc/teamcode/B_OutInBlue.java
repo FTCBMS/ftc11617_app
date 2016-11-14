@@ -22,13 +22,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
 
-//Out Start, Out Beacon
+//Out Start, In Beacon
 
 
 
 
-@Autonomous(name="RMVO1", group="Vuforia")
-public class RMVO1 extends LinearOpMode {
+@Autonomous(name="Out, In, Team Blue", group="Vuforia: Team Blue")
+public class B_OutInBlue extends LinearOpMode {
     RMHardwarePushbot robot = new RMHardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -69,19 +69,20 @@ public class RMVO1 extends LinearOpMode {
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
         robot.tankDrive(0.4);
-        sleep(2750);
+        sleep(4000);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED, -6, 6, 4.0);
+        encoderDrive(TURN_SPEED, 3, -3, 4.0);
         disableEncoders();
-        robot.tankDrive(0.4);
-        sleep(3250);
+       // robot.tankDrive(0.4);
+      //  sleep(3250);
+        //robot.tankDrive(0);
+        //enableEncoders();
+       // encoderDrive(TURN_SPEED, 8, -8, 4.0);
+        //disableEncoders();
         robot.tankDrive(0);
-        enableEncoders();
-        encoderDrive(TURN_SPEED, 8, -8, 4.0);
-        disableEncoders();
-        robot.tankDrive(0);
-        //VuforiaTracker tracker = new VuforiaTracker(telemetry, robot, beacons);
+
+        // 45, forward for 0.75s, -45, forward 2.5s, 90
         whole_thing: while (opModeIsActive()) {
             int i = 0;
             for (VuforiaTrackable beac : beacons) {
@@ -136,106 +137,8 @@ public class RMVO1 extends LinearOpMode {
             telemetry.update();
             idle();
         }
-        String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
-
-        telemetry.addData("Red", rgbs.red());
-        telemetry.addData("Green", rgbs.green());
-        telemetry.addData("Green", rgbs.green());
-        telemetry.addData("Blue", rgbs.blue());
-        telemetry.addData("Clear", rgbs.alpha());
-        telemetry.addData("Color", color);
-        if (color == "red" ) {
-            robot.servo.setPosition(1);
-            telemetry.addData("", "Red Detected");
-            robot.leftMotor.setPower(0.2);
-            robot.rightMotor.setPower(0.2);
-            sleep(1000);
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
-        }
-        if (color == "blue" ){
-            robot.servo.setPosition(0);
-            telemetry.addData("", "Blue Detected");
-            robot.leftMotor.setPower(0.2);
-            robot.rightMotor.setPower(0.2);
-            sleep(1000);
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
-        }
-        else {
-            telemetry.addData("", "No blue or red detected");
-            //robot.leftMotor.setPower(-0.2);
-            //robot.rightMotor.setPower(-0.2);
-            sleep(2000);
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
-        }
-        robot.tankDrive(-0.4);
-        sleep(1500);
-        enableEncoders();
-        encoderDrive(TURN_SPEED, 9, -9, 4.0);
-        disableEncoders();
-        robot.tankDrive(0.4);
-        sleep(3000);
-        enableEncoders();
-        encoderDrive(TURN_SPEED, -9, 9, 4.0);
-
-        whole_thing2: while (opModeIsActive()) {
-            int i = 0;
-            for (VuforiaTrackable beac : beacons) {
-                if (i < 4) {
-                    OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
-                    if (pose != null) {
-                        VectorF translation = pose.getTranslation();
-                        telemetry.addData(beac.getName() + "-Translation", translation);
-                        telemetry.addData("X offset", translation.get(0));
-                        telemetry.addData("Y offset", translation.get(1));
-                        telemetry.addData("Z offset (?)", translation.get(2));
-                        double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
-                        telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
-                        telemetry.update();
-                        double positionOnScreen = translation.get(1); // = translation.get(0) for upright phones
-                        // ^^ IMPORTANT ^^: phone must be right-side-down or it will move away from the picture!
-                        double adjust = positionOnScreen / 170;
-                        adjust = clamp(adjust, 0, 0.175);
-                        if (translation.get(2) < -350) { // If z axis (distance) > ~8in (approx.)
-                            robot.rightMotor.setPower(0.2667 - adjust);
-                            robot.leftMotor.setPower(0.2667 + adjust);
-                        } else if (translation.get(2) < -75) {
-                            robot.leftMotor.setPower((0.2667 - (adjust - 0.1) * 0.3));
-                            robot.rightMotor.setPower((0.2667 + (adjust) - 0.1) * 0.3);
-                        } else {
-                            robot.rightMotor.setPower(0);
-                            robot.leftMotor.setPower(0);
-                            break whole_thing2;
-                        }
-                        /* (positionOnScreen > 10) { // Right side of screen
-                            robot.rightMotor.setPower(0.3);
-                            robot.leftMotor.setPower(0.9);
-                        }else if (positionOnScreen < -10 ){ // Left side of screen
-                            robot.rightMotor.setPower(0.9);
-                            robot.leftMotor.setPower(0.3);
-                        }else{ // Near the middle
-                            robot.leftMotor.setPower(0.5);
-                            robot.rightMotor.setPower(0.5);
-                        }*/
-                        /*int idles = 0;
-                        for (int j=0;j<idles;j++) {
-                            idle();
-                        }*/
-                        sleep(150);
-                    } else {
-                        telemetry.addData("No image found", "");
-                        robot.tankDrive(0);
-                    }
-                }
-                i++;
-            }
-            telemetry.update();
-            idle();
-        }
         telemetry.update();
-        color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+        String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
 
         telemetry.addData("Red", rgbs.red());
         telemetry.addData("Green", rgbs.green());
@@ -246,7 +149,8 @@ public class RMVO1 extends LinearOpMode {
         //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
         idle();
         if (color == "red" ) {
-            robot.servo.setPosition(1);
+            robot.servo.setPosition(0);
+            idle();
             telemetry.addData("", "Red Detected");
             robot.leftMotor.setPower(0.2);
             robot.rightMotor.setPower(0.2);
@@ -255,7 +159,8 @@ public class RMVO1 extends LinearOpMode {
             robot.rightMotor.setPower(0);
         }
         if (color == "blue" ){
-            robot.servo.setPosition(0);
+            robot.servo.setPosition(1);
+            idle();
             telemetry.addData("", "Blue Detected");
             robot.leftMotor.setPower(0.2);
             robot.rightMotor.setPower(0.2);

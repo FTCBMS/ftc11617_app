@@ -21,14 +21,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 
-//INVERSE OF RMVO3
-//In Start, In Beacon
+
+//Out Start, Out Beacon
 
 
-
-
-@Autonomous(name="RMVO7", group="Vuforia")
-public class RMVO7 extends LinearOpMode {
+@Autonomous(name = "Out, Out, Team Red", group = "Vuforia: Team Red")
+public class R_OutOutRed extends LinearOpMode {
     RMHardwarePushbot robot = new RMHardwarePushbot();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -40,6 +38,7 @@ public class RMVO7 extends LinearOpMode {
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.4;
     ColorSensor rgbs = null;
+
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
@@ -62,28 +61,29 @@ public class RMVO7 extends LinearOpMode {
         waitForStart();
 
         beacons.activate();
-        //robot.tankDrive(0.4);
-       //sleep(300);
-       // robot.tankDrive(0);
+//        robot.tankDrive(0.4);
+//        sleep(300);
+//        robot.tankDrive(0);
 //        enableEncoders();
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
         robot.tankDrive(0.4);
-        sleep(2000);
+        sleep(2750);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED, -6, 6, 4.0);
+        encoderDrive(TURN_SPEED, 5, -5, 4.0);
         disableEncoders();
-//        robot.tankDrive(0.4);
-//        sleep(3250);
-//        robot.tankDrive(0);
-//        enableEncoders();
- //       encoderDrive(TURN_SPEED, 8, -8, 4.0);
- //       disableEncoders();
+        robot.tankDrive(0.4);
+        sleep(3250);//3000
+        robot.tankDrive(0);
+        enableEncoders();
+        encoderDrive(TURN_SPEED, -8, 8, 4.0);
+        disableEncoders();
         robot.tankDrive(0);
 
         // 45, forward for 0.75s, -45, forward 2.5s, 90
-        whole_thing: while (opModeIsActive()) {
+        whole_thing:
+        while (opModeIsActive()) {
             int i = 0;
             for (VuforiaTrackable beac : beacons) {
                 if (i < 4) {
@@ -148,8 +148,9 @@ public class RMVO7 extends LinearOpMode {
         //telemetry.update();
         //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
         idle();
-        if (color == "red" ) {
-            robot.servo.setPosition(1);
+        if (color == "red") {
+            robot.servo.setPosition(0);
+            idle();
             telemetry.addData("", "Red Detected");
             robot.leftMotor.setPower(0.2);
             robot.rightMotor.setPower(0.2);
@@ -157,16 +158,16 @@ public class RMVO7 extends LinearOpMode {
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
         }
-        if (color == "blue" ){
-            robot.servo.setPosition(0);
+        if (color == "blue") {
+            robot.servo.setPosition(1);
+            idle();
             telemetry.addData("", "Blue Detected");
             robot.leftMotor.setPower(0.2);
             robot.rightMotor.setPower(0.2);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
-        }
-        else {
+        } else {
             telemetry.addData("", "No blue or red detected");
             //robot.leftMotor.setPower(-0.2);
             //robot.rightMotor.setPower(-0.2);
@@ -175,19 +176,21 @@ public class RMVO7 extends LinearOpMode {
             robot.rightMotor.setPower(0);
         }
         telemetry.update();
-        telemetry.update();
         sleep(10000);
         rgbs.enableLed(false);
         stop();
     }
+
     public void enableEncoders() {
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
     public void disableEncoders() {
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
     public double clamp(double x, double min, double max) {
         return Math.min(max, Math.max(min, x));
     }
@@ -226,8 +229,8 @@ public class RMVO7 extends LinearOpMode {
                 telemetry.addData("Path2", "Running at %7d :%7d",
                         robot.leftMotor.getCurrentPosition(),
                         robot.rightMotor.getCurrentPosition());
-                telemetry.update();
 
+                telemetry.update();
                 // Allow time for other processes to run.
                 idle();
             }
@@ -242,19 +245,14 @@ public class RMVO7 extends LinearOpMode {
         //}
         if (r >= 2) {
             return "red";
-        }else if (b >= 2) {
+        } else if (b >= 2) {
             return "blue";
         }//else if (r <= 3 && g <= 3 && b <= 3) {
         // return "black";
         //}
-        else{
+        else {
             return "other";
         }
-
-
-
-
-
 
 
     }
