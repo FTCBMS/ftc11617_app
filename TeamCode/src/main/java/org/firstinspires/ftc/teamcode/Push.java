@@ -35,7 +35,7 @@ public class Push {
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
 
-    //public Servo servo = null;
+    public Servo servo = null;
 
     /* Constructor */
     // Robbie: is that function really needed?
@@ -55,7 +55,7 @@ public class Push {
         //launcherPart1 = hwMap.dcMotor.get("launch1");
         //launcherPart2 = hwMap.dcMotor.get("launch2");
 
-        //servo = hwMap.servo.get("servo");
+        servo = hwMap.servo.get("servo");
 
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
@@ -75,8 +75,7 @@ public class Push {
         //launcherPart2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         sweepAndElevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        //servo = hwMap.servo.get("beaconPusher");
-        //servo.setPosition(1);
+        servo.setPosition(1);
 
         // Define and initialize ALL installed servos.
         //leftClaw = hwMap.servo.get("left_hand");
