@@ -63,14 +63,15 @@ public class TeleEE extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        double left;
-        double right;
+        double left = 0;
+        double right = 0;
         //double launch;
         double activateSweeperAndElevator;
         double reverseSweeperAndElevator;
         boolean pressed = false;
         boolean moved = false;
-
+        boolean exponentialRate = false; // exponential rate disabled by default
+        boolean xIsPressedLastFrame = false;
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
@@ -78,20 +79,34 @@ public class TeleEE extends LinearOpMode {
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Remember", "Press X");
         telemetry.update();
-
+        //to enable exponential rate, a helpful feature.
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            if (gamepad1.x && !xIsPressedLastFrame) { // When button gets pushed down;
+                exponentialRate ^= true;
+                telemetry.addData("Exponential rate enabled", exponentialRate);
+                telemetry.update();
+            }
+            xIsPressedLastFrame = gamepad1.x;
+            if (exponentialRate) {
+                left = -(gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y));
+                right = -(gamepad1.right_stick_y * Math.abs(gamepad1.left_stick_y));
+            }else {
+                left = -gamepad1.left_stick_y;
+                right = -gamepad1.right_stick_y;
+            }
+            //launch = gamepad2.right_trigger;
+            //activateSweeperAndElevator = gamepad2.left_trigger;
+            ///reverseSweeperAndElevator = gamepad2.right_trigger;
 
-
-            left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
-          //  launch = gamepad2.right_trigger;
-            activateSweeperAndElevator = gamepad2.left_trigger;
-            reverseSweeperAndElevator = gamepad2.right_trigger;
+//            if (exponentialRate) {
+//                activateSweeperAndElevator = gamepad2.left_trigger * gamepad2.left_trigger;
+//            }
 
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
@@ -99,16 +114,18 @@ public class TeleEE extends LinearOpMode {
             //robot.launcherPart1.setPower(launch);
             //robot.launcherPart2.setPower(launch);
 
-
-            if (gamepad2.left_trigger > 0 && gamepad2.left_bumper == false) {
-                robot.sweepAndElevator.setPower(1);
-            }
-            if (gamepad2.left_trigger > 0 && gamepad2.left_bumper == true) {
-                robot.sweepAndElevator.setPower(-1);
+            if (gamepad2.left_trigger > 0) {
+                if (gamepad2.left_bumper) {
+                    robot.sweepAndElevator.setPower(-1);
+                } else {
+                    robot.sweepAndElevator.setPower(1);
+                }
             }
             else {
                 robot.sweepAndElevator.setPower(0);
             }
+
+
 //
 //if (gamepad2.b && pressed == false) {
 //                robot.sweepAndElevator.setPower(-activateSweeperAndElevator);
@@ -118,14 +135,20 @@ public class TeleEE extends LinearOpMode {
 //                robot.sweepAndElevator.setPower(activateSweeperAndElevator);
 //                pressed = false;
 //            }
-           // if (gamepad2.a && moved == false) {
-             //   robot.servo.setPosition(0);
-               // pressed = true;
-            //}
-            //if (gamepad2.a && moved == true) {
-              //  robot.servo.setPosition(1);
-                //pressed = false;
-          //  }
+            if (gamepad2.a) {
+                if (moved) {
+                    robot.servo.setPosition(1);
+                    moved = false;
+                }
+                else {
+                    robot.servo.setPosition(0);
+                    moved = true;
+                }
+            }
+            if (gamepad2.a && moved == true) {
+                robot.servo.setPosition(1);
+                moved = false;
+            }
             // Use gamepad left & right Bumpers to open and close the claw
             //   if (gamepad1.right_bumper)
             //      clawOffset += CLAW_SPEED;
@@ -159,6 +182,6 @@ public class TeleEE extends LinearOpMode {
 
 
         }
-        stop();
+
     }
 }
