@@ -29,7 +29,7 @@ public class Push {
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
     public DcMotor sweepAndElevator = null;
-    //public DcMotor launcherPart1 = null;
+    public DcMotor launcher = null;
     //public DcMotor launcherPart2 = null;
     /* local OpMode members. */
     HardwareMap hwMap = null;
@@ -52,30 +52,30 @@ public class Push {
         leftMotor = hwMap.dcMotor.get("left_drive");
         rightMotor = hwMap.dcMotor.get("right_drive");
         sweepAndElevator = hwMap.dcMotor.get("sweeper");
-        //launcherPart1 = hwMap.dcMotor.get("launch1");
-        //launcherPart2 = hwMap.dcMotor.get("launch2");
+        launcher = hwMap.dcMotor.get("launcher");
+       // launcherPart2 = hwMap.dcMotor.get("launcher2");
 
         servo = hwMap.servo.get("servo");
 
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        //launcherPart1.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        //launcherPart2.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        launcher.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+      //  launcherPart2.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         sweepAndElevator.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
 
         leftMotor.setPower(0);
         rightMotor.setPower(0);
-       // launcherPart1.setPower(0);
-        //launcherPart2.setPower(0);
+        launcher.setPower(0);
+       // launcherPart2.setPower(0);
         sweepAndElevator.setPower(0);
 
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-       // launcherPart1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        launcher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //launcherPart2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         sweepAndElevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        servo.setPosition(1);
+        servo.setPosition(0.5);
 
         // Define and initialize ALL installed servos.
         //leftClaw = hwMap.servo.get("left_hand");

@@ -58,7 +58,6 @@ public class R_InOutRed extends LinearOpMode {
         beacons.get(3).setName("Gears");
         rgbs = hardwareMap.colorSensor.get("colorsensor");
         rgbs.enableLed(false);
-        robot.servo.setPosition(1);
         waitForStart();
 
         beacons.activate();
@@ -68,11 +67,11 @@ public class R_InOutRed extends LinearOpMode {
 //        enableEncoders();
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
-        robot.tankDrive(0.4);
-        sleep(5000);
+        robot.tankDrive(-0.4);
+        sleep(5500);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED, -7.5, 7.5, 4.0);
+        encoderDrive(0.2, -10, 10, 4.0);
         disableEncoders();
 //        robot.tankDrive(0.4);
 //        sleep(3250);
@@ -102,11 +101,11 @@ public class R_InOutRed extends LinearOpMode {
                         double adjust = positionOnScreen / 170;
                         adjust = clamp(adjust, 0, 0.175);
                         if (translation.get(2) < -350) { // If z axis (distance) > ~8in (approx.)
-                            robot.rightMotor.setPower(0.2667 - adjust);
-                            robot.leftMotor.setPower(0.2667 + adjust);
+                            robot.rightMotor.setPower(-0.2667 + adjust);
+                            robot.leftMotor.setPower(-0.2667 - adjust);
                         } else if (translation.get(2) < -75) {
-                            robot.leftMotor.setPower((0.2667 - (adjust - 0.1) * 0.3));
-                            robot.rightMotor.setPower((0.2667 + (adjust) - 0.1) * 0.3);
+                            robot.leftMotor.setPower((-0.2667 + (adjust - 0.1) * 0.3));
+                            robot.rightMotor.setPower((-0.2667 - (adjust) - 0.1) * 0.3);
                         } else {
                             robot.rightMotor.setPower(0);
                             robot.leftMotor.setPower(0);
@@ -149,21 +148,21 @@ public class R_InOutRed extends LinearOpMode {
         //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
         idle();
         if (color == "red" ) {
-            robot.servo.setPosition(1);
+            robot.servo.setPosition(0);
             idle();
             telemetry.addData("", "Red Detected");
-            robot.leftMotor.setPower(0.2);
-            robot.rightMotor.setPower(0.2);
+            robot.leftMotor.setPower(-0.2);
+            robot.rightMotor.setPower(-0.2);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
         }
         if (color == "blue" ){
-            robot.servo.setPosition(0);
+            robot.servo.setPosition(1);
             idle();
             telemetry.addData("", "Blue Detected");
-            robot.leftMotor.setPower(0.2);
-            robot.rightMotor.setPower(0.2);
+            robot.leftMotor.setPower(-0.2);
+            robot.rightMotor.setPower(-0.2);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
