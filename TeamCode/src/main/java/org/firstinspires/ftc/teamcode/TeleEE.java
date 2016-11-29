@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
@@ -56,22 +57,24 @@ public class TeleEE extends LinearOpMode {
 
     /* Declare OpMode members. */
     Push robot = new Push();   // Use a Pushbot's hardware
-
+    private ElapsedTime runtime = new ElapsedTime();
     // could also use HardwarePushbotMatrix class.
     //   double          clawOffset      = 0;                       // Servo mid position
     //  final double    CLAW_SPEED      = 0.02 ;                   // sets rate to move servo
+    double left = 0;
+    double right = 0;
+    double launch;
+    double activateSweeperAndElevator;
+    double reverseSweeperAndElevator;
+    boolean pressed = false;
 
+    boolean exponentialRate = false; // exponential rate disabled by default
+    boolean xIsPressedLastFrame =  false;
+    boolean aIsPressedLastFrame = false;
+    boolean drivingBackwards = false;
+    static final double MAX_POWER = 0.65;
     @Override
     public void runOpMode() throws InterruptedException {
-        double left = 0;
-        double right = 0;
-        //double launch;
-        double activateSweeperAndElevator;
-        double reverseSweeperAndElevator;
-        boolean pressed = false;
-        boolean moved = false;
-        boolean exponentialRate = false; // exponential rate disabled by default
-        boolean xIsPressedLastFrame = false;
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
@@ -79,7 +82,7 @@ public class TeleEE extends LinearOpMode {
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
-        telemetry.addData("Remember", "Press X");
+        //telemetry.addData("Remember", "Press X");
         telemetry.update();
         //to enable exponential rate, a helpful feature.
         // Wait for the game to start (driver presses PLAY)
@@ -88,8 +91,8 @@ public class TeleEE extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             if (gamepad1.x && !xIsPressedLastFrame) { // When button gets pushed down;
-                exponentialRate ^= true;
-                telemetry.addData("Exponential rate enabled", exponentialRate);
+                exponentialRate = !exponentialRate;
+                telemetry.addData("Dual rate/exp. enabled", exponentialRate);
                 telemetry.update();
             }
             xIsPressedLastFrame = gamepad1.x;
@@ -100,23 +103,34 @@ public class TeleEE extends LinearOpMode {
                 left = -gamepad1.left_stick_y;
                 right = -gamepad1.right_stick_y;
             }
-            //launch = gamepad2.right_trigger;
-            //activateSweeperAndElevator = gamepad2.left_trigger;
+            launch = (gamepad2.right_trigger * MAX_POWER);
+            telemetry.addData("Launcher at %launch","power!");
+            telemetry.update();
+            /// /activateSweeperAndElevator = gamepad2.left_trigger;
             ///reverseSweeperAndElevator = gamepad2.right_trigger;
 
-//            if (exponentialRate) {
+//            if (exponentialRate)                  {
 //                activateSweeperAndElevator = gamepad2.left_trigger * gamepad2.left_trigger;
 //            }
+            if (drivingBackwards) {
+                robot.leftMotor.setPower(-right);
+                robot.rightMotor.setPower(-left);
+            }else{
+                robot.leftMotor.setPower(left);
+                robot.rightMotor.setPower(right);
+            }
+            robot.launcher.setPower(launch);
+           // robot.launcherPart2.setPower(launch);
 
-            robot.leftMotor.setPower(left);
-            robot.rightMotor.setPower(right);
-
-            //robot.launcherPart1.setPower(launch);
-            //robot.launcherPart2.setPower(launch);
+            if (launch > MAX_POWER){
+                robot.launcher.setPower(MAX_POWER);
+                //robot.launcherPart2.setPower(max);
+           }
 
             if (gamepad2.left_trigger > 0) {
                 if (gamepad2.left_bumper) {
                     robot.sweepAndElevator.setPower(-1);
+                    robot.launcher.setPower(-0.3);
                 } else {
                     robot.sweepAndElevator.setPower(1);
                 }
@@ -135,20 +149,22 @@ public class TeleEE extends LinearOpMode {
 //                robot.sweepAndElevator.setPower(activateSweeperAndElevator);
 //                pressed = false;
 //            }
-            if (gamepad2.a) {
-                if (moved) {
-                    robot.servo.setPosition(1);
-                    moved = false;
-                }
-                else {
-                    robot.servo.setPosition(0);
-                    moved = true;
-                }
+
+            if(gamepad2.a) {
+                robot.servo.setPosition(-1);
+                telemetry.addData("Set servo to 0", "");
             }
-            if (gamepad2.a && moved == true) {
+            if (gamepad2.b) {
                 robot.servo.setPosition(1);
-                moved = false;
+                telemetry.addData("Set servo to 1","");
             }
+            telemetry.update();
+
+            if (gamepad1.a && !aIsPressedLastFrame) {
+                drivingBackwards = !drivingBackwards;
+            }
+            aIsPressedLastFrame = gamepad1.a;
+
             // Use gamepad left & right Bumpers to open and close the claw
             //   if (gamepad1.right_bumper)
             //      clawOffset += CLAW_SPEED;

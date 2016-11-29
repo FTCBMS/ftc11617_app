@@ -205,7 +205,7 @@ public class RMVO_Mega extends LinearOpMode {
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    public double clamp(double x, double min, double max) {
+    public static double clamp(double x, double min, double max) {
         return Math.min(max, Math.max(min, x));
     }
 

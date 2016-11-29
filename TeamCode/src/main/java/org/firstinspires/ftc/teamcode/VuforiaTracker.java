@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,13 +19,15 @@ public class VuforiaTracker {
     Telemetry telemetry;
     RMHardwarePushbot robot;
     VuforiaTrackables beacons;
-    public VuforiaTracker(Telemetry tel, RMHardwarePushbot bot, VuforiaTrackables beacs) {
+    LinearOpMode opmode;
+    public VuforiaTracker(Telemetry tel, RMHardwarePushbot bot, VuforiaTrackables beacs, LinearOpMode instance) {
         telemetry = tel;
         robot = bot;
         beacons = beacs;
+        opmode = instance;
     }
     public void followBeacon() throws InterruptedException {
-        whole_thing: while (true) {
+        whole_thing: while (opmode.opModeIsActive()) {
             int i = 0;
             for (VuforiaTrackable beac : beacons) {
                 if (i < 4) {
@@ -37,18 +40,21 @@ public class VuforiaTracker {
                         telemetry.addData("Z offset (?)", translation.get(2));
                         double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
                         telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
+                        telemetry.addData("adjust", translation.get(1) / 100);
                         telemetry.update();
+
                         double positionOnScreen = translation.get(1); // = translation.get(0) for upright phones
                         // ^^ IMPORTANT ^^: phone must be right-side-down or it will move away from the picture!
-                        double adjust = positionOnScreen / 170;
-                        adjust = Math.max(0, Math.min(adjust, 0.175));
-                        if (translation.get(2) < -400) { // If z axis (distance) > ~8in (approx.)
-                            robot.rightMotor.setPower(0.2667 - adjust);
-                            robot.leftMotor.setPower(0.2667 + adjust);
+                        double adjust = positionOnScreen / 100; // was 170
+
+                        adjust = RMVO_Mega.clamp(adjust, -0.05, 0.3); // was clamp(adjust, 0, 0.175)
+                        if (translation.get(2) < -350) { // If z axis (distance) > ~8in (approx.)
+                            robot.rightMotor.setPower(-0.3 + adjust);
+                            robot.leftMotor.setPower(-0.25 - adjust);
                         } else if (translation.get(2) < -75) {
-                            robot.leftMotor.setPower((0.2667 - (adjust - 0.1 + 0.1) * 0.3));
-                            robot.rightMotor.setPower((0.2667 + (adjust) - 0.1 + 0.1) * 0.3);
-                        } else {
+                            robot.leftMotor.setPower((-3 + adjust) * 0.3);
+                            robot.rightMotor.setPower((-25 - adjust) * 0.3);
+                        } else{
                             robot.rightMotor.setPower(0);
                             robot.leftMotor.setPower(0);
                             break whole_thing;
@@ -61,8 +67,8 @@ public class VuforiaTracker {
                             robot.leftMotor.setPower(0.3);
                         }else{ // Near the middle
                             robot.leftMotor.setPower(0.5);
-                            robot.rightMotor.setPower(0.5);
-                        }*/
+                        robot.rightMotor.setPower(0.5);
+                    }*/
                         /*int idles = 0;
                         for (int j=0;j<idles;j++) {
                             idle();
@@ -70,7 +76,7 @@ public class VuforiaTracker {
                         Thread.sleep(150);
                     } else {
                         telemetry.addData("No image found", "");
-                        robot.tankDrive(0);
+                        robot.tankDrive(0.05, 0.05);
                     }
                 }
                 i++;
@@ -78,6 +84,8 @@ public class VuforiaTracker {
             telemetry.update();
             Thread.yield();
         }
+        telemetry.update();
+        Thread.yield();
         robot.tankDrive(0.4);
         Thread.sleep(500);
         robot.tankDrive(0);

@@ -57,7 +57,6 @@ public class R_OutOutRed extends LinearOpMode {
         beacons.get(3).setName("Gears");
         rgbs = hardwareMap.colorSensor.get("colorsensor");
         rgbs.enableLed(false);
-        robot.servo.setPosition(1);
         waitForStart();
 
         beacons.activate();
@@ -67,13 +66,13 @@ public class R_OutOutRed extends LinearOpMode {
 //        enableEncoders();
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
-        robot.tankDrive(0.4);
+        robot.tankDrive(-0.4);
         sleep(2750);
         robot.tankDrive(0);
         enableEncoders();
         encoderDrive(TURN_SPEED, 5, -5, 4.0);
         disableEncoders();
-        robot.tankDrive(0.4);
+        robot.tankDrive(-0.4);
         sleep(3250);//3000
         robot.tankDrive(0);
         enableEncoders();
@@ -102,11 +101,11 @@ public class R_OutOutRed extends LinearOpMode {
                         double adjust = positionOnScreen / 170;
                         adjust = clamp(adjust, 0, 0.175);
                         if (translation.get(2) < -350) { // If z axis (distance) > ~8in (approx.)
-                            robot.rightMotor.setPower(0.2667 - adjust);
-                            robot.leftMotor.setPower(0.2667 + adjust);
+                            robot.rightMotor.setPower(-0.2667 + adjust);
+                            robot.leftMotor.setPower(-0.2667 - adjust);
                         } else if (translation.get(2) < -75) {
-                            robot.leftMotor.setPower((0.2667 - (adjust - 0.1) * 0.3));
-                            robot.rightMotor.setPower((0.2667 + (adjust) - 0.1) * 0.3);
+                            robot.leftMotor.setPower((-0.2667 + (adjust - 0.1) * 0.3));
+                            robot.rightMotor.setPower((-0.2667 - (adjust) - 0.1) * 0.3);
                         } else {
                             robot.rightMotor.setPower(0);
                             robot.leftMotor.setPower(0);
@@ -152,9 +151,9 @@ public class R_OutOutRed extends LinearOpMode {
             robot.servo.setPosition(0);
             idle();
             telemetry.addData("", "Red Detected");
-            robot.leftMotor.setPower(0.2);
-            robot.rightMotor.setPower(0.2);
-            sleep(1000);
+            robot.leftMotor.setPower(-0.2);
+            robot.rightMotor.setPower(-0.2);
+            sleep(1500);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
         }
@@ -162,9 +161,9 @@ public class R_OutOutRed extends LinearOpMode {
             robot.servo.setPosition(1);
             idle();
             telemetry.addData("", "Blue Detected");
-            robot.leftMotor.setPower(0.2);
-            robot.rightMotor.setPower(0.2);
-            sleep(1000);
+            robot.leftMotor.setPower(-0.2);
+            robot.rightMotor.setPower(-0.2);
+            sleep(1500);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
         } else {
