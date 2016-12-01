@@ -72,7 +72,7 @@ public class TeleEE extends LinearOpMode {
     boolean xIsPressedLastFrame =  false;
     boolean aIsPressedLastFrame = false;
     boolean drivingBackwards = false;
-    static final double MAX_POWER = 0.65;
+    static final double MAX_POWER = 0.5;
     @Override
     public void runOpMode() throws InterruptedException {
         /* Initialize the hardware variables.
