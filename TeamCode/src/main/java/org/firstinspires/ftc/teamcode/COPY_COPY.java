@@ -15,6 +15,23 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.R;
+import org.firstinspires.ftc.teamcode.RMHardwarePushbot;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.HINT;
+import com.vuforia.Vuforia;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by Windows on 2016-09-19.
@@ -24,15 +41,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 //In Start, In Beacon
 
 
-@Autonomous(name = "In, In, Team Blue", group = "Vuforia: Team Blue")
-public class B_InInBlueDouble extends LinearOpMode {
+@Autonomous(name = "COPY_COPY", group = "Vuforia: Team Blue")
+public class COPY_COPY extends LinearOpMode {
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 0.6;
-    static final double TURN_SPEED = -0.6;
+    static final double TURN_SPEED_1 = 0.6;
+    static final double TURN_SPEED_2 = 0.6;
+    static enum TrackingAlgorithm {
+        STEPPED,
+        EXP_P_CONTROL,
+        P_CONTROL,
+    };
+    static final org.firstinspires.ftc.teamcode.CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY.TrackingAlgorithm ALGORITHM = org.firstinspires.ftc.teamcode.CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY.TrackingAlgorithm.EXP_P_CONTROL;
     RMHardwarePushbot robot = new RMHardwarePushbot();
     ColorSensor rgbs = null;
     private ElapsedTime runtime = new ElapsedTime();
@@ -65,10 +89,10 @@ public class B_InInBlueDouble extends LinearOpMode {
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
         robot.tankDrive(-0.4);
-        sleep(1550);
+        sleep(1700);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED, 12, -12, 4.0);
+        encoderDrive(TURN_SPEED_1, 12, -12, 4.0);
         disableEncoders();
 //        robot.tankDrive(0.4);
 //        sleep(3250);
@@ -87,9 +111,107 @@ public class B_InInBlueDouble extends LinearOpMode {
                     OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
                     if (pose != null) {
                         VectorF translation = pose.getTranslation();
-                       // telemetry.addData(beac.getName() + "-Translation", translation);
+                        // telemetry.addData(beac.getName() + "-Translation", translation);
 //                        telemetry.addData("X offset", translation.get(0));
-                       // telemetry.addData("Y offset", translation.get(1));
+                        // telemetry.addData("Y offset", translation.get(1));
+                        telemetry.addData("Z offset", translation.get(2));
+//                        double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
+//                        telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
+                        telemetry.update();
+                        double positionOnScreen = translation.get(1); // = translation.get(0) for upright phones
+                        // ^^ IMPORTANT ^^: phone must be right-side-down or it will move away from the picture!
+//                        double adjust = positionOnScreen / 170;
+//                        adjust = clamp(adjust, 0, 0.175);
+//                        if (translation.get(2) < -350)
+//                            robot.rightMotor.setPower(-0.2667 + adjust);
+//                            robot.leftMotor.setPower(-0.2667 - adjust);
+//                        }
+                        if (translation.get(2) < -150) { // If z axis (distance) > ~8in (approx.)
+//                            robot.leftMotor.setPower((-0.2667 + (adjust - 0.1) * 0.3));
+//                            robot.rightMotor.setPower((-0.2667 - (adjust) - 0.1) * 0.3);
+                            double adj = positionOnScreen / 250;
+                            adj = Math.min(0.2, Math.max(-0.2, adj));
+                            robot.rightMotor.setPower(-0.2 - adj);
+                            robot.leftMotor.setPower(-0.2 + adj);
+                        } else {
+                            robot.rightMotor.setPower(0);
+                            robot.leftMotor.setPower(0);
+                            break whole_thing;
+                        }
+                        telemetry.update();
+                        sleep(100);
+                    } else {
+                        //telemetry.addData("No image found", "");
+                        robot.tankDrive(0.05);
+                    }
+                }
+            }
+            telemetry.update();
+            idle();
+        }
+        telemetry.update();
+        String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+
+        telemetry.addData("Red", rgbs.red());
+        telemetry.addData("Green", rgbs.green());
+        telemetry.addData("Blue", rgbs.blue());
+        telemetry.addData("Clear", rgbs.alpha());
+        telemetry.addData("Color", color);
+        telemetry.update();
+        //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+        idle();
+        if (color == "red") {
+            robot.servo.setPosition(1);
+            telemetry.addData("", "MOVING SERVO 1");
+            sleep(500);
+            idle();
+            telemetry.addData("", "Red Detected");
+            telemetry.update();
+        }else if (color == "blue"){
+            robot.servo.setPosition(-1);
+            telemetry.addData("", "MOVING SERVO -1");
+            idle();
+            sleep(500);
+            telemetry.addData("", "Blue Detected");
+            telemetry.update();
+        }else{
+            telemetry.addData("Problem", "No red or blue detected");
+            telemetry.update();
+        }
+        robot.tankDrive(-0.3);
+        sleep(1000);
+        robot.tankDrive(0);
+        /* else {
+            telemetry.addData("", "No blue or red detected");
+            //robot.leftMotor.setPower(-0.2);
+            //robot.rightMotor.setPower(-0.2);
+            telemetry.update();
+            sleep(2000);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+        }*/
+        robot.tankDrive(0.2);
+        sleep(450);
+        enableEncoders();
+        encoderDrive(TURN_SPEED_1, -13, 13, 8.0);
+        //turn more, forward mo23
+        disableEncoders();
+        robot.tankDrive(-0.4);
+        sleep(1640);
+        enableEncoders();
+        encoderDrive(TURN_SPEED_2, 9, -9, 8.0);
+        disableEncoders();
+        whole_thing_2:
+        while (opModeIsActive()) {
+            int i = 0;
+            for (VuforiaTrackable beac : beacons) {
+                if (i < 4) {
+                    OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
+                    if (pose != null) {
+                        VectorF translation = pose.getTranslation();
+                        // telemetry.addData(beac.getName() + "-Translation", translation);
+//                        telemetry.addData("X offset", translation.get(0));
+                        // telemetry.addData("Y offset", translation.get(1));
                         telemetry.addData("Z offset", translation.get(2));
 //                        double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
 //                        telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
@@ -106,22 +228,22 @@ public class B_InInBlueDouble extends LinearOpMode {
 //                            robot.leftMotor.setPower((-0.2667 + (adjust - 0.1) * 0.3));
 //                            robot.rightMotor.setPower((-0.2667 - (adjust) - 0.1) * 0.3);
                             if (positionOnScreen > 5) { // Right side of screen
-                                robot.rightMotor.setPower(-0.25);
-                                robot.leftMotor.setPower(0);
+                                robot.rightMotor.setPower(-0.3);
+                                robot.leftMotor.setPower(-0.05);
                                 telemetry.addData("Turning:", "Right");
                             } else if (positionOnScreen < -5) { // Left side of screen
-                                robot.rightMotor.setPower(0);
-                                robot.leftMotor.setPower(-0.25);
+                                robot.rightMotor.setPower(-0.05);
+                                robot.leftMotor.setPower(-0.3);
                                 telemetry.addData("Turning:", "Left");
                             } else { // Near the middle
-                                robot.leftMotor.setPower(-0.1);
-                                robot.rightMotor.setPower(-0.1);
+                                robot.leftMotor.setPower(-0.15);
+                                robot.rightMotor.setPower(-0.15);
                                 telemetry.addData("Turning:", "Straight");
                             }
                         } else {
                             robot.rightMotor.setPower(0);
                             robot.leftMotor.setPower(0);
-                            break whole_thing;
+                            break whole_thing_2;
                         }
                         telemetry.update();
                         sleep(100);
@@ -135,46 +257,56 @@ public class B_InInBlueDouble extends LinearOpMode {
             idle();
         }
         telemetry.update();
-        String color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
-
-        telemetry.addData("Red", rgbs.red());
+        color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
         telemetry.addData("Green", rgbs.green());
         telemetry.addData("Blue", rgbs.blue());
         telemetry.addData("Clear", rgbs.alpha());
         telemetry.addData("Color", color);
-        //telemetry.update();
-        //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
+        telemetry.update();
+
         idle();
         if (color == "red") {
             robot.servo.setPosition(1);
             sleep(500);
             idle();
             telemetry.addData("", "Red Detected");
-            robot.leftMotor.setPower(-0.1);
-            robot.rightMotor.setPower(-0.1);
+            telemetry.update();
+            robot.leftMotor.setPower(-0.3);
+            robot.rightMotor.setPower(-0.3);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
-        }
+        }//line up:
+        //
+
+
         if (color == "blue") {
-            robot.servo.setPosition(0);
+            robot.servo.setPosition(-1);
             idle();
             sleep(500);
             telemetry.addData("", "Blue Detected");
-            robot.leftMotor.setPower(-0.1);
-            robot.rightMotor.setPower(-0.1);
+            telemetry.update();
+            robot.leftMotor.setPower(-0.3);
+            robot.rightMotor.setPower(-0.3);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
-        } else {
+        }/* else {
             telemetry.addData("", "No blue or red detected");
             //robot.leftMotor.setPower(-0.2);
             //robot.rightMotor.setPower(-0.2);
+            telemetry.update();
             sleep(2000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
-        }
-//        telemetry.update();
+        }*/
+        robot.leftMotor.setPower(0.1);
+        robot.rightMotor.setPower(0.1);
+        sleep(500);
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+//
+// telemetry.update();
 //        robot.tankDrive(-0.4);
 //        sleep(1500);
 //        enableEncoders();
@@ -202,7 +334,7 @@ public class B_InInBlueDouble extends LinearOpMode {
 //                        telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
 //                        telemetry.update();
 //                        double positionOnScreen = translation.get(1); // = translation.get(0) for upright phones
-//                        // ^^ IMPORTANT ^^: phone must be right-side-down or it will move away from the picture!
+//                       // ^^ IMPORTANT ^^: phone must be right-side-down or it will move away from the picture!
 //                        double adjust = positionOnScreen / 170;
 //                        adjust = clamp(adjust, 0, 0.175);
 //                        if (translation.get(2) < -350) { // If z axis (distance) > ~8in (approx.)
@@ -283,7 +415,7 @@ public class B_InInBlueDouble extends LinearOpMode {
 //        telemetry.update();
 //        sleep(10000);
 //        rgbs.enableLed(false);
-//        stop();
+        stop();
     }
 
     public void enableEncoders() {
