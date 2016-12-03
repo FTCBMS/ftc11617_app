@@ -119,13 +119,8 @@ public class TeleEE extends LinearOpMode {
                 robot.leftMotor.setPower(left);
                 robot.rightMotor.setPower(right);
             }
-            robot.launcher.setPower(launch);
+            robot.launcher.setPower(launch * MAX_POWER);
            // robot.launcherPart2.setPower(launch);
-
-            if (launch > MAX_POWER){
-                robot.launcher.setPower(MAX_POWER);
-                //robot.launcherPart2.setPower(max);
-           }
 
             if (gamepad2.left_trigger > 0) {
                 if (gamepad2.left_bumper) {

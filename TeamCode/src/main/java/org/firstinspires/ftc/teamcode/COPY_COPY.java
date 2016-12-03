@@ -15,23 +15,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.R;
-import org.firstinspires.ftc.teamcode.RMHardwarePushbot;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.HINT;
-import com.vuforia.Vuforia;
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by Windows on 2016-09-19.
@@ -56,7 +39,7 @@ public class COPY_COPY extends LinearOpMode {
         EXP_P_CONTROL,
         P_CONTROL,
     };
-    static final org.firstinspires.ftc.teamcode.CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY.TrackingAlgorithm ALGORITHM = org.firstinspires.ftc.teamcode.CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY.TrackingAlgorithm.EXP_P_CONTROL;
+    static final TrackingAlgorithm ALGORITHM = TrackingAlgorithm.EXP_P_CONTROL;
     RMHardwarePushbot robot = new RMHardwarePushbot();
     ColorSensor rgbs = null;
     private ElapsedTime runtime = new ElapsedTime();
@@ -89,10 +72,10 @@ public class COPY_COPY extends LinearOpMode {
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
         robot.tankDrive(-0.4);
-        sleep(1700);
+        sleep(1535);
         robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED_1, 12, -12, 4.0);
+        encoderDrive(0.4, 7, -7, 4.0);
         disableEncoders();
 //        robot.tankDrive(0.4);
 //        sleep(3250);
@@ -101,6 +84,14 @@ public class COPY_COPY extends LinearOpMode {
         //       encoderDrive(TURN_SPEED, 8, -8, 4.0);
         //       disableEncoders();
         robot.tankDrive(0);
+
+
+        //todos: rev launch during Vuforia, elevate up for 3 sec
+
+
+
+
+
 
         // 45, forward for 0.75s, -45, forward 2.5s, 90
         whole_thing:
@@ -126,7 +117,7 @@ public class COPY_COPY extends LinearOpMode {
 //                            robot.rightMotor.setPower(-0.2667 + adjust);
 //                            robot.leftMotor.setPower(-0.2667 - adjust);
 //                        }
-                        if (translation.get(2) < -150) { // If z axis (distance) > ~8in (approx.)
+                        if (translation.get(2) < -200) { // If z axis (distance) > ~8in (approx.)
 //                            robot.leftMotor.setPower((-0.2667 + (adjust - 0.1) * 0.3));
 //                            robot.rightMotor.setPower((-0.2667 - (adjust) - 0.1) * 0.3);
                             double adj = positionOnScreen / 250;
@@ -142,7 +133,7 @@ public class COPY_COPY extends LinearOpMode {
                         sleep(100);
                     } else {
                         //telemetry.addData("No image found", "");
-                        robot.tankDrive(0.05);
+                        robot.tankDrive(0);
                     }
                 }
             }
@@ -157,31 +148,33 @@ public class COPY_COPY extends LinearOpMode {
         telemetry.addData("Blue", rgbs.blue());
         telemetry.addData("Clear", rgbs.alpha());
         telemetry.addData("Color", color);
-        telemetry.update();
+        //telemetry.update();
         //color = getColorNameFromValues(rgbs.red(), rgbs.green(), rgbs.blue());
         idle();
         if (color == "red") {
             robot.servo.setPosition(1);
-            telemetry.addData("", "MOVING SERVO 1");
             sleep(500);
             idle();
             telemetry.addData("", "Red Detected");
             telemetry.update();
-        }else if (color == "blue"){
+            robot.leftMotor.setPower(-0.3);
+            robot.rightMotor.setPower(-0.3);
+            sleep(1000);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+        }
+        if (color == "blue") {
             robot.servo.setPosition(-1);
-            telemetry.addData("", "MOVING SERVO -1");
             idle();
             sleep(500);
             telemetry.addData("", "Blue Detected");
             telemetry.update();
-        }else{
-            telemetry.addData("Problem", "No red or blue detected");
-            telemetry.update();
-        }
-        robot.tankDrive(-0.3);
-        sleep(1000);
-        robot.tankDrive(0);
-        /* else {
+            robot.leftMotor.setPower(-0.3);
+            robot.rightMotor.setPower(-0.3);
+            sleep(1000);
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+        }/* else {
             telemetry.addData("", "No blue or red detected");
             //robot.leftMotor.setPower(-0.2);
             //robot.rightMotor.setPower(-0.2);
@@ -193,16 +186,16 @@ public class COPY_COPY extends LinearOpMode {
         robot.tankDrive(0.2);
         sleep(450);
         enableEncoders();
-        encoderDrive(TURN_SPEED_1, -13, 13, 8.0);
+        encoderDrive(0.4, -12.5, 12.5, 8.0);
         //turn more, forward mo23
         disableEncoders();
         robot.tankDrive(-0.4);
-        sleep(1640);
+        sleep(2000);
         enableEncoders();
-        encoderDrive(TURN_SPEED_2, 9, -9, 8.0);
+        encoderDrive(0.4, 6.5, -6.5, 8.0);
         disableEncoders();
         whole_thing_2:
-        while (opModeIsActive()) {
+        whole_thing2: while (opModeIsActive()) {
             int i = 0;
             for (VuforiaTrackable beac : beacons) {
                 if (i < 4) {
@@ -227,19 +220,10 @@ public class COPY_COPY extends LinearOpMode {
                         if (translation.get(2) < -200) { // If z axis (distance) > ~8in (approx.)
 //                            robot.leftMotor.setPower((-0.2667 + (adjust - 0.1) * 0.3));
 //                            robot.rightMotor.setPower((-0.2667 - (adjust) - 0.1) * 0.3);
-                            if (positionOnScreen > 5) { // Right side of screen
-                                robot.rightMotor.setPower(-0.3);
-                                robot.leftMotor.setPower(-0.05);
-                                telemetry.addData("Turning:", "Right");
-                            } else if (positionOnScreen < -5) { // Left side of screen
-                                robot.rightMotor.setPower(-0.05);
-                                robot.leftMotor.setPower(-0.3);
-                                telemetry.addData("Turning:", "Left");
-                            } else { // Near the middle
-                                robot.leftMotor.setPower(-0.15);
-                                robot.rightMotor.setPower(-0.15);
-                                telemetry.addData("Turning:", "Straight");
-                            }
+                            double adj = positionOnScreen / 250;
+                            adj = Math.min(0.2, Math.max(-0.2, adj));
+                            robot.rightMotor.setPower(-0.2 - adj);
+                            robot.leftMotor.setPower(-0.2 + adj);
                         } else {
                             robot.rightMotor.setPower(0);
                             robot.leftMotor.setPower(0);
@@ -262,7 +246,7 @@ public class COPY_COPY extends LinearOpMode {
         telemetry.addData("Blue", rgbs.blue());
         telemetry.addData("Clear", rgbs.alpha());
         telemetry.addData("Color", color);
-        telemetry.update();
+        //telemetry.update();
 
         idle();
         if (color == "red") {
@@ -460,7 +444,7 @@ public class COPY_COPY extends LinearOpMode {
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
-
+//                                            ^^ LEAVE THESE HERE
                 // Display it for the driver.
                 telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
                 telemetry.addData("Path2", "Running at %7d :%7d",
@@ -515,6 +499,3 @@ robot.rightMotor.setPower(0.2);
                             robot.leftMotor.setPower(-0.2 - (positionOnScreen / 100));
                             robot.rightMotor.setPower(-0.2 + (positionOnScreen / 100));
                              */
-
-
-

@@ -71,11 +71,13 @@ public class CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY extends 
 //        enableEncoders();
 //        encoderDrive(TURN_SPEED, 6, -6, 4.0);
 //        disableEncoders();
-        robot.tankDrive(-0.4);
-        sleep(1700);
-        robot.tankDrive(0);
+       // robot.tankDrive(-0.4);
+       // sleep(1535);
+        //robot.tankDrive(0);
         enableEncoders();
-        encoderDrive(TURN_SPEED_1, 12, -12, 4.0);
+        encoderDrive(0.4, -26, -26, 80.0);
+//        enableEncoders();
+        encoderDrive(0.4, 7, -7, 4.0);
         disableEncoders();
 //        robot.tankDrive(0.4);
 //        sleep(3250);
@@ -85,6 +87,7 @@ public class CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY extends 
         //       disableEncoders();
         robot.tankDrive(0);
 
+        //todos: rev launch during Vuforia, elevate up for 3 sec
         // 45, forward for 0.75s, -45, forward 2.5s, 90
         whole_thing:
         while (opModeIsActive()) {
@@ -112,12 +115,12 @@ public class CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY extends 
                         if (translation.get(2) < -200) { // If z axis (distance) > ~8in (approx.)
 //                            robot.leftMotor.setPower((-0.2667 + (adjust - 0.1) * 0.3));
 //                            robot.rightMotor.setPower((-0.2667 - (adjust) - 0.1) * 0.3);
-                                 if (positionOnScreen > 5) { // Right side of screen
+                                 if (positionOnScreen > 10) { // Right side of screen
                                      robot.rightMotor.setPower(-0.3);
-                                     robot.leftMotor.setPower(-0.05);
+                                     robot.leftMotor.setPower(-0.025);
                                      telemetry.addData("Turning:", "Right");
-                                 } else if (positionOnScreen < -5) { // Left side of screen
-                                     robot.rightMotor.setPower(-0.05);
+                                 } else if (positionOnScreen < -10) { // Left side of screen
+                                     robot.rightMotor.setPower(-0.025);
                                      robot.leftMotor.setPower(-0.3);
                                      telemetry.addData("Turning:", "Left");
                                  } else { // Near the middle
@@ -158,8 +161,8 @@ public class CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY extends 
             idle();
             telemetry.addData("", "Red Detected");
             telemetry.update();
-            robot.leftMotor.setPower(-0.3);
-            robot.rightMotor.setPower(-0.3);
+            robot.leftMotor.setPower(-0.2);
+            robot.rightMotor.setPower(-0.2);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
@@ -170,30 +173,25 @@ public class CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY extends 
             sleep(500);
             telemetry.addData("", "Blue Detected");
             telemetry.update();
-            robot.leftMotor.setPower(-0.3);
-            robot.rightMotor.setPower(-0.3);
+            robot.leftMotor.setPower(-0.2);
+            robot.rightMotor.setPower(-0.2);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
-        }/* else {
-            telemetry.addData("", "No blue or red detected");
-            //robot.leftMotor.setPower(-0.2);
-            //robot.rightMotor.setPower(-0.2);
-            telemetry.update();
-            sleep(2000);
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
-        }*/
+        }
+
         robot.tankDrive(0.2);
         sleep(450);
         enableEncoders();
-        encoderDrive(0.4, -13, 13, 8.0);
+        encoderDrive(0.4, -12.5, 12.5, 8.0);
         //turn more, forward mo23
-        disableEncoders();
-        robot.tankDrive(-0.4);
-        sleep(1600);
+       // disableEncoders();
+      //  robot.tankDrive(-0.4);
+        //sleep(2000);
         enableEncoders();
-        encoderDrive(TURN_SPEED_2, 9, -9, 8.0);
+        encoderDrive(0.4, -26, -26, 80.0);
+        enableEncoders();
+        encoderDrive(0.4, 6.5, -6.5, 8.0);
         disableEncoders();
         whole_thing_2:
         while (opModeIsActive()) {
@@ -223,10 +221,10 @@ public class CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY extends 
 //                            robot.rightMotor.setPower((-0.2667 - (adjust) - 0.1) * 0.3);
                             if (positionOnScreen > 5) { // Right side of screen
                                 robot.rightMotor.setPower(-0.3);
-                                robot.leftMotor.setPower(-0.05);
+                                robot.leftMotor.setPower(-0.025);
                                 telemetry.addData("Turning:", "Right");
                             } else if (positionOnScreen < -5) { // Left side of screen
-                                robot.rightMotor.setPower(-0.05);
+                                robot.rightMotor.setPower(-0.025);
                                 robot.leftMotor.setPower(-0.3);
                                 telemetry.addData("Turning:", "Left");
                             } else { // Near the middle
@@ -242,7 +240,7 @@ public class CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY extends 
                         telemetry.update();
                         sleep(100);
                     } else {
-                        //telemetry.addData("No image found", "");
+                        telemetry.addData("No image found", "");
                         robot.tankDrive(0);
                     }
                 }
@@ -265,8 +263,8 @@ public class CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY extends 
             idle();
             telemetry.addData("", "Red Detected");
             telemetry.update();
-            robot.leftMotor.setPower(-0.3);
-            robot.rightMotor.setPower(-0.3);
+            robot.leftMotor.setPower(-0.2);
+            robot.rightMotor.setPower(-0.2);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
@@ -280,8 +278,8 @@ public class CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY extends 
             sleep(500);
             telemetry.addData("", "Blue Detected");
             telemetry.update();
-            robot.leftMotor.setPower(-0.3);
-            robot.rightMotor.setPower(-0.3);
+            robot.leftMotor.setPower(-0.2);
+            robot.rightMotor.setPower(-0.2);
             sleep(1000);
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
@@ -454,7 +452,7 @@ public class CCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOPPPPPPPPPPPPPPPYYYYYYYYYYYY extends 
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
-
+//                                            ^^ LEAVE THESE HERE
                 // Display it for the driver.
                 telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
                 telemetry.addData("Path2", "Running at %7d :%7d",
