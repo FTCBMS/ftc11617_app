@@ -61,18 +61,19 @@ public class Lobber_R extends LinearOpMode {
         waitForStart();
 
         beacons.activate();
-        robot.launcher.setPower(0.7);
+        robot.launcher.setPower(0.6);
         sleep(400);
         robot.sweepAndElevator.setPower(1);
         sleep(100);
-        robot.launcher.setPower(0.5);
+        robot.launcher.setPower(0.6);
         sleep(200);
         sleep(1800);
         robot.sweepAndElevator.setPower(0);
+        sleep(10000);
         robot.launcher.setPower(0);
-        robot.leftMotor.setPower(.6);
-        robot.rightMotor.setPower(.2);
-        sleep(3000);
+        robot.leftMotor.setPower(0.6);
+        robot.rightMotor.setPower(0.6);
+        sleep(2500);
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
 

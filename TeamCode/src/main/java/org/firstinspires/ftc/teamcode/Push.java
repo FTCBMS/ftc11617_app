@@ -92,6 +92,14 @@ public class Push {
      * @param periodMs Length of wait cycle in mSec.
      * @throws InterruptedException
      */
+    public void tankDrive(double leftMotorPower, double rightMotorPower) {
+        leftMotor.setPower(leftMotorPower);
+        rightMotor.setPower(rightMotorPower);
+    }
+    public void tankDrive(double motorPower) { // Function overloading
+        leftMotor.setPower(motorPower);
+        rightMotor.setPower(motorPower);
+    }
     public void waitForTick(long periodMs) throws InterruptedException {
 
         long remaining = periodMs - (long) period.milliseconds();
