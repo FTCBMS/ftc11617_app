@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //In Start, In Beacon
 
 
-@Autonomous(name = "BlueAutonomous", group = "Vuforia V2")
+@Autonomous(name = "BlueAutonomousSAFETYCOPY", group = "Vuforia V2")
 public class BlueAutonomousSAFETYCOPY extends AutonomousOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
