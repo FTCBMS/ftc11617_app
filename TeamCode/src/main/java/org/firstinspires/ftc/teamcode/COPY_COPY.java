@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,6 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
 @Autonomous(name = "COPY_COPY", group = "Vuforia: Team Blue")
+@Disabled
 public class COPY_COPY extends LinearOpMode {
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
@@ -478,24 +480,3 @@ public class COPY_COPY extends LinearOpMode {
 
     }
 }
-
-
-
-
-
-
-
-/*else if  (positionOnScreen > 5) { // Right side of screen
-robot.rightMotor.setPower(0.2);
-        robot.leftMotor.setPower(0.);
-        }else if (positionOnScreen < -5 ){ // Left side of screen
-        robot.rightMotor.setPower(0.6);
-        robot.leftMotor.setPower(0.3);
-        }
-
-
-
-/* // simple P controller, better than ^^ if adjusted properly
-                            robot.leftMotor.setPower(-0.2 - (positionOnScreen / 100));
-                            robot.rightMotor.setPower(-0.2 + (positionOnScreen / 100));
-                             */

@@ -72,7 +72,7 @@ public class TeleEE extends LinearOpMode {
     boolean xIsPressedLastFrame =  false;
     boolean aIsPressedLastFrame = false;
     boolean drivingBackwards = false;
-    static final double MAX_POWER = 0.75;
+    static final double MAX_POWER = 1;
     @Override
     public void runOpMode() throws InterruptedException {
         /* Initialize the hardware variables.
@@ -104,8 +104,8 @@ public class TeleEE extends LinearOpMode {
                 right = -gamepad1.right_stick_y;
             }
             launch = (gamepad2.right_trigger * MAX_POWER);
-            telemetry.addData("Launcher at %launch","power!");
-            telemetry.update();
+            //telemetry.addData("Launcher at %launch","power!");
+            //telemetry.update();
             /// /activateSweeperAndElevator = gamepad2.left_trigger;
             ///reverseSweeperAndElevator = gamepad2.right_trigger;
 
@@ -120,12 +120,14 @@ public class TeleEE extends LinearOpMode {
                 robot.rightMotor.setPower(right);
             }
             robot.launcher.setPower(launch * MAX_POWER);
+            telemetry.addData("Power", launch * MAX_POWER);
+            telemetry.update();
            // robot.launcherPart2.setPower(launch);
 
             if (gamepad2.left_trigger > 0) {
                 if (gamepad2.left_bumper) {
                     robot.sweepAndElevator.setPower(-1);
-                    robot.launcher.setPower(-0.3);
+                    robot.launcher.setPower(-0.6);
                 } else {
                     robot.sweepAndElevator.setPower(1);
                 }
@@ -134,6 +136,19 @@ public class TeleEE extends LinearOpMode {
                 robot.sweepAndElevator.setPower(0);
             }
 
+            if (gamepad2.y = true) {
+                if (pressed = false){
+                    robot.launcher.setPower(1);
+                    sleep(3000);
+                    robot.sweepAndElevator.setPower(1);
+                    pressed = true;
+                }
+                else if (pressed = true){
+                    robot.launcher.setPower(0);
+                    robot.sweepAndElevator.setPower(0);
+                    pressed = false;
+                }
+            }
 
 //
 //if (gamepad2.b && pressed == false) {
@@ -182,8 +197,8 @@ public class TeleEE extends LinearOpMode {
             // Send telemetry message to signify robot running;
             //    telemetry.addData("claw",  "Offset = %.2f", clawOffset);
 
-            telemetry.addData("left", "%.2f", left);
-            telemetry.addData("right", "%.2f", right);
+            //telemetry.addData("left", "%.2f", left);
+            //telemetry.addData("right", "%.2f", right);
 
             telemetry.update();
 
