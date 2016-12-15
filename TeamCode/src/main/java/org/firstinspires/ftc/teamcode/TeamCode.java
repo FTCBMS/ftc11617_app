@@ -33,20 +33,24 @@ public abstract class TeamCode {
     public static final double DRIVE_SPEED = 0.4;
     public static final double TURN_SPEED = 0.3;
     ElapsedTime runtime = new ElapsedTime();
-
     public static enum Color {
         RED,
         BLUE
     };
-    public static void pushBeacon(AutonomousOpMode op, TeamCode.Color teamColor) {
+    public static void pushBeacon(AutonomousOpMode op, TeamCode.Color teamColor, boolean shoot) {
         op.robot.tankDrive(0);
         whole_thing:
         while (op.opModeIsActive()) {
+            double status = 0;
             int i = 0;
             for (VuforiaTrackable beac : op.beacons) {
                 if (i < 4) {
                     OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
                     if (pose != null) {
+                        if (status == 0 && shoot) {
+                            op.robot.launcher.setPower(1);
+                            status = 1;
+                        }
                         VectorF translation = pose.getTranslation();
                         // telemetry.addData("X offset", translation.get(0));
                         // telemetry.addData("Y offset", translation.get(1));
@@ -97,6 +101,10 @@ public abstract class TeamCode {
             op.sleep(1000);
             op.robot.leftMotor.setPower(0);
             op.robot.rightMotor.setPower(0);
+            if (shoot) {
+                op.robot.sweepAndElevator.setPower(1);
+            }
+            op.sleep(3500);
         }
         if (color == "blue") {
             int pos = (teamColor == Color.BLUE ? -1 : 1);
@@ -110,6 +118,14 @@ public abstract class TeamCode {
             op.sleep(1000);
             op.robot.leftMotor.setPower(0);
             op.robot.rightMotor.setPower(0);
+            if (shoot) {
+                op.robot.sweepAndElevator.setPower(1);
+            }
+            op.sleep(3500);
+        }
+        if (shoot) {
+            op.robot.sweepAndElevator.setPower(0);
+            op.robot.launcher.setPower(0);
         }
     }
     public double clamp(double x, double min, double max) {

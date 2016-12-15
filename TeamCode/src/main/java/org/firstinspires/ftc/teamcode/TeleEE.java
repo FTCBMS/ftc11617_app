@@ -41,17 +41,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
  * The code is structured as a LinearOpMode
- *
+ * <p>
  * This particular OpMode executes a POV Game style Teleop for a PushBot
  * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOp w/ Sweeper, Elevator, and Launcher", group="11617 TeleOp")
+@TeleOp(name = "TeleOp w/ Sweeper, Elevator, and Launcher", group = "11617 TeleOp")
 //@Disabled
 public class TeleEE extends LinearOpMode {
 
@@ -69,10 +69,11 @@ public class TeleEE extends LinearOpMode {
     boolean pressed = false;
 
     boolean exponentialRate = false; // exponential rate disabled by default
-    boolean xIsPressedLastFrame =  false;
+    boolean xIsPressedLastFrame = false;
     boolean aIsPressedLastFrame = false;
     boolean drivingBackwards = false;
     static final double MAX_POWER = 1;
+
     @Override
     public void runOpMode() throws InterruptedException {
         /* Initialize the hardware variables.
@@ -84,7 +85,6 @@ public class TeleEE extends LinearOpMode {
         telemetry.addData("Say", "Hello Driver");    //
         //telemetry.addData("Remember", "Press X");
         telemetry.update();
-        //to enable exponential rate, a helpful feature.
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -99,7 +99,7 @@ public class TeleEE extends LinearOpMode {
             if (exponentialRate) {
                 left = -(gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y));
                 right = -(gamepad1.right_stick_y * Math.abs(gamepad1.left_stick_y));
-            }else {
+            } else {
                 left = -gamepad1.left_stick_y;
                 right = -gamepad1.right_stick_y;
             }
@@ -115,14 +115,14 @@ public class TeleEE extends LinearOpMode {
             if (drivingBackwards) {
                 robot.leftMotor.setPower(-right);
                 robot.rightMotor.setPower(-left);
-            }else{
+            } else {
                 robot.leftMotor.setPower(left);
                 robot.rightMotor.setPower(right);
             }
             robot.launcher.setPower(launch * MAX_POWER);
             telemetry.addData("Power", launch * MAX_POWER);
             telemetry.update();
-           // robot.launcherPart2.setPower(launch);
+            // robot.launcherPart2.setPower(launch);
 
             if (gamepad2.left_trigger > 0) {
                 if (gamepad2.left_bumper) {
@@ -131,24 +131,19 @@ public class TeleEE extends LinearOpMode {
                 } else {
                     robot.sweepAndElevator.setPower(1);
                 }
-            }
-            else {
+            } else {
                 robot.sweepAndElevator.setPower(0);
             }
 
-            if (gamepad2.y = true) {
-                if (pressed = false){
-                    robot.launcher.setPower(1);
-                    sleep(3000);
-                    robot.sweepAndElevator.setPower(1);
-                    pressed = true;
-                }
-                else if (pressed = true){
-                    robot.launcher.setPower(0);
-                    robot.sweepAndElevator.setPower(0);
-                    pressed = false;
-                }
+            if (gamepad2.y) {
+                robot.launcher.setPower(1);
+                sleep(3000);
+                robot.sweepAndElevator.setPower(1);
+                sleep(6000);
+                robot.launcher.setPower(0);
+                robot.sweepAndElevator.setPower(0);
             }
+
 
 //
 //if (gamepad2.b && pressed == false) {
@@ -160,13 +155,13 @@ public class TeleEE extends LinearOpMode {
 //                pressed = false;
 //            }
 
-            if(gamepad2.a) {
+            if (gamepad2.a) {
                 robot.servo.setPosition(-1);
                 telemetry.addData("Set servo to 0", "");
             }
             if (gamepad2.b) {
                 robot.servo.setPosition(1);
-                telemetry.addData("Set servo to 1","");
+                telemetry.addData("Set servo to 1", "");
             }
             telemetry.update();
 
@@ -204,7 +199,6 @@ public class TeleEE extends LinearOpMode {
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
             robot.waitForTick(40);
-
 
 
         }

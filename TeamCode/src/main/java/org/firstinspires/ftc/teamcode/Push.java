@@ -89,7 +89,7 @@ public class Push {
      * periodic tick.  This is used to compensate for varying processing times for each cycle.
      * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
      *
-     * @param periodMs Length of wait cycle in mSec.
+     * @param //periodMs Length of wait cycle in mSec.
      * @throws InterruptedException
      */
     public void tankDrive(double leftMotorPower, double rightMotorPower) {
