@@ -17,7 +17,9 @@ public class BlueAutonomous extends AutonomousOpMode {
         robot.init(hardwareMap);
         initVuforia();
         rgbs = hardwareMap.colorSensor.get("colorsensor");
-//        rgbs.enableLed(true);
+        rgbs.enableLed(true);
+        sleep(500);
+        rgbs.enableLed(false);
         waitForStart();
 //        robot.launcher.setPower(0.5);
         beacons.activate();
@@ -47,9 +49,13 @@ public class BlueAutonomous extends AutonomousOpMode {
         sleep(200);
         encoderDrive(DRIVE_SPEED, -18.5, -18.5, 80.0);
         sleep(200);
-        encoderDrive(TURN_SPEED, 5, -5, 8.0);
+        encoderDrive(TURN_SPEED, 7, -7, 8.0);
         disableEncoders();
-        TeamCode.pushBeacon(this, TeamCode.Color.BLUE, false);
+        boolean result = TeamCode.pushBeacon(this, TeamCode.Color.BLUE, false);
+        if (!result) {
+            sleep(500);
+            TeamCode.pushBeacon(this, TeamCode.Color.BLUE, false);
+        }
         robot.leftMotor.setPower(0.1);
         robot.rightMotor.setPower(0.1);
         sleep(500);

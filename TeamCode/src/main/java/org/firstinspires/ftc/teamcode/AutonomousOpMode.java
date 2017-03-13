@@ -98,8 +98,9 @@ public abstract class AutonomousOpMode extends LinearOpMode {
     }
     public void enableLaunchMode() {
         robot.launcher.setPower(1);
-        sleep(3000);
+        sleep(3500);
         robot.sweepAndElevator.setPower(1);
+        sleep(3500);
         pressed = true;
     }
     public void disableLaunchMode() {

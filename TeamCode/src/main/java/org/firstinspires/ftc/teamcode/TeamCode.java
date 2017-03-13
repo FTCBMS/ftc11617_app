@@ -37,7 +37,7 @@ public abstract class TeamCode {
         RED,
         BLUE
     };
-    public static void pushBeacon(AutonomousOpMode op, TeamCode.Color teamColor, boolean shoot) {
+    public static boolean pushBeacon(AutonomousOpMode op, TeamCode.Color teamColor, boolean shoot) {
         op.robot.tankDrive(0);
         whole_thing:
         while (op.opModeIsActive()) {
@@ -47,10 +47,10 @@ public abstract class TeamCode {
                 if (i < 4) {
                     OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
                     if (pose != null) {
-                        if (status == 0 && shoot) {
-                            op.robot.launcher.setPower(1);
-                            status = 1;
-                        }
+//                        if (status == 0 && shoot) {
+//                            op.robot.launcher.setPower(.65);
+//                            status = 1;
+//                        }
                         VectorF translation = pose.getTranslation();
                         // telemetry.addData("X offset", translation.get(0));
                         // telemetry.addData("Y offset", translation.get(1));
@@ -60,9 +60,9 @@ public abstract class TeamCode {
                         // ^^ IMPORTANT ^^: phone must be right-side-down or it will move away from the picture!
                         if (translation.get(2) < TeamCode.AUTONOMOUS_STOP_POINT) { // If z axis (distance) > ~8in (approx.)
                             double adj = positionOnScreen / TeamCode.AUTONOMOUS_P_SENSITIVITY;
-                            adj = Math.min(0.2, Math.max(-0.2, adj));
-                            op.robot.rightMotor.setPower(-0.2 - adj);
-                            op.robot.leftMotor.setPower(-0.2 + adj);
+                            adj = Math.min(0.2, Math.max(-0.1, adj));
+                            op.robot.rightMotor.setPower(-0.1 - adj);
+                            op.robot.leftMotor.setPower(-0.1 + adj);
                         } else {
                             op.robot.rightMotor.setPower(0);
                             op.robot.leftMotor.setPower(0);
@@ -89,6 +89,7 @@ public abstract class TeamCode {
         op.telemetry.addData("Color", color);
         //telemetry.update();
         op.idle();
+        boolean success = false;
         if (color == "red") {
             int pos = (teamColor == Color.BLUE ? 1 : -1);
             op.robot.servo.setPosition(pos);
@@ -96,8 +97,8 @@ public abstract class TeamCode {
             op.sleep(500);
             op.telemetry.addData("", "Red Detected");
             op.telemetry.update();
-            op.robot.leftMotor.setPower(-0.2);
-            op.robot.rightMotor.setPower(-0.2);
+            op.robot.leftMotor.setPower(-0.3);
+            op.robot.rightMotor.setPower(-0.3);
             op.sleep(1000);
             op.robot.leftMotor.setPower(0);
             op.robot.rightMotor.setPower(0);
@@ -105,6 +106,7 @@ public abstract class TeamCode {
                 op.robot.sweepAndElevator.setPower(1);
             }
             op.sleep(3500);
+            success = true;
         }
         if (color == "blue") {
             int pos = (teamColor == Color.BLUE ? -1 : 1);
@@ -113,8 +115,8 @@ public abstract class TeamCode {
             op.sleep(500);
             op.telemetry.addData("", "Blue Detected");
             op.telemetry.update();
-            op.robot.leftMotor.setPower(-0.2);
-            op.robot.rightMotor.setPower(-0.2);
+            op.robot.leftMotor.setPower(-0.3);
+            op.robot.rightMotor.setPower(-0.3);
             op.sleep(1000);
             op.robot.leftMotor.setPower(0);
             op.robot.rightMotor.setPower(0);
@@ -122,11 +124,13 @@ public abstract class TeamCode {
                 op.robot.sweepAndElevator.setPower(1);
             }
             op.sleep(3500);
+            success = true;
         }
         if (shoot) {
             op.robot.sweepAndElevator.setPower(0);
             op.robot.launcher.setPower(0);
         }
+        return success;
     }
     public double clamp(double x, double min, double max) {
         return Math.min(max, Math.max(min, x));
